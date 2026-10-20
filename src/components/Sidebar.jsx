@@ -24,7 +24,7 @@ import {
   X,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
-import { docs, sections, VERSION } from '../docs.js'
+import { getDocs, getSections, VERSION } from '../docs.js'
 
 const iconMap = {
   BookOpen,
@@ -51,17 +51,39 @@ const iconMap = {
   Layers,
 }
 
-export default function Sidebar({ onNavigate }) {
+const copy = {
+  es: {
+    docs: 'Documentación',
+    close: 'Cerrar menú',
+    nav: 'Índice de documentación',
+    version: 'Versión documentada',
+    body: 'Unity 6.3 LTS o superior. Modelo opcional no incluido.',
+  },
+  en: {
+    docs: 'Documentation',
+    close: 'Close menu',
+    nav: 'Documentation index',
+    version: 'Documented version',
+    body: 'Unity 6.3 LTS or newer. Optional model not included.',
+  },
+}
+
+export default function Sidebar({ lang = 'es', onNavigate }) {
+  const docs = getDocs(lang)
+  const sections = getSections(lang)
+  const t = copy[lang] ?? copy.es
+  const basePath = lang === 'en' ? '/en/docs' : '/docs'
+
   return (
     <aside className="docs-sidebar">
       <div className="docs-sidebar__top">
-        <span className="docs-sidebar__label">Documentación</span>
-        <button className="icon-button docs-sidebar__close" type="button" onClick={onNavigate} aria-label="Cerrar menú">
+        <span className="docs-sidebar__label">{t.docs}</span>
+        <button className="icon-button docs-sidebar__close" type="button" onClick={onNavigate} aria-label={t.close}>
           <X size={18} />
         </button>
       </div>
 
-      <nav className="docs-nav" aria-label="Índice de documentación">
+      <nav className="docs-nav" aria-label={t.nav}>
         {sections.map((section) => (
           <div className="docs-nav__group" key={section}>
             <span className="docs-nav__section">{section}</span>
@@ -72,7 +94,7 @@ export default function Sidebar({ onNavigate }) {
                 return (
                   <NavLink
                     key={doc.slug}
-                    to={`/docs/${doc.slug}`}
+                    to={`${basePath}/${doc.slug}`}
                     className={({ isActive }) => `docs-nav__link${isActive ? ' is-active' : ''}`}
                     onClick={onNavigate}
                   >
@@ -86,9 +108,9 @@ export default function Sidebar({ onNavigate }) {
       </nav>
 
       <div className="sidebar-card">
-        <span className="sidebar-card__eyebrow">Versión documentada</span>
+        <span className="sidebar-card__eyebrow">{t.version}</span>
         <strong>Ecos v{VERSION}</strong>
-        <p>Unity 6.3 LTS o superior. Modelo opcional no incluido.</p>
+        <p>{t.body}</p>
       </div>
     </aside>
   )

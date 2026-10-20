@@ -7,7 +7,7 @@ const indexPath = path.join(dist, 'index.html')
 const docsSourcePath = path.join(root, 'src', 'docs.js')
 
 if (!fs.existsSync(indexPath)) {
-  throw new Error('dist/index.html no existe; ejecuta "vite build" primero')
+  throw new Error('dist/index.html does not exist; run "vite build" first')
 }
 
 const indexHtml = fs.readFileSync(indexPath, 'utf8')
@@ -15,11 +15,22 @@ const docsSource = fs.readFileSync(docsSourcePath, 'utf8')
 const slugs = [...docsSource.matchAll(/slug:\s*'([^']+)'/g)].map((match) => match[1])
 
 const uniqueSlugs = [...new Set(slugs)]
-for (const slug of uniqueSlugs) {
-  const routeDirectory = path.join(dist, 'docs', slug)
+
+function writeRoute(routeDirectory, fileName = 'index.html') {
   fs.mkdirSync(routeDirectory, { recursive: true })
-  fs.writeFileSync(path.join(routeDirectory, 'index.html'), indexHtml)
-  fs.writeFileSync(path.join(dist, 'docs', `${slug}.html`), indexHtml)
+  fs.writeFileSync(path.join(routeDirectory, fileName), indexHtml)
 }
 
-console.log(`Rutas estáticas generadas: ${uniqueSlugs.length}`)
+for (const slug of uniqueSlugs) {
+  writeRoute(path.join(dist, 'docs', slug))
+  writeRoute(path.join(dist, 'docs'), `${slug}.html`)
+
+  writeRoute(path.join(dist, 'en', 'docs', slug))
+  writeRoute(path.join(dist, 'en', 'docs'), `${slug}.html`)
+}
+
+// The language root and the docs index are also useful for clean static navigation.
+writeRoute(path.join(dist, 'en'))
+writeRoute(path.join(dist, 'en', 'docs'))
+
+console.log(`Static routes generated: ${uniqueSlugs.length * 4 + 2}`)

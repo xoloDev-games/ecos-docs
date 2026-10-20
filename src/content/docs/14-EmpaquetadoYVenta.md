@@ -209,6 +209,8 @@ El script:
 9. Comprueba que **no** hay errores de compilación en Consola.
 10. Cierra y reabre el proyecto: los assets deben seguir referenciados y el paquete sin
     modelo debe seguir funcionando.
+11. Activa **URP** (17.3.0) y reconstruye la demo: los materiales deben usar
+    `Universal Render Pipeline/Lit`; genera también un build standalone.
 
 ### Checklist de contenido
 
@@ -218,8 +220,9 @@ El script:
 - [ ] `LICENSE.md` (EULA o licencia propia).
 - [ ] `Third Party Notices.md` (modelo opcional Apache 2.0, tokenizador MIT).
 - [ ] `LICENSE-APACHE-2.0.txt` con el texto completo de Apache 2.0 (referencia).
-- [ ] `Documentation~/index.md` y los 14 documentos.
+- [ ] `Documentation~/index.md` y los 14 capítulos, con las páginas de proyecto (ES/EN).
 - [ ] Diagramas `arquitectura.png`, `flujo-eco.png`.
+- [ ] Materiales de la demo compatibles con Built-in y URP.
 - [ ] `Runtime/Core` sin `UnityEngine`.
 - [ ] `Runtime/Ecos` con asmdef y dependencias.
 - [ ] `Editor` con asmdef editor-only.
@@ -274,7 +277,8 @@ Actualiza:
 ### Qué destacar en la ficha
 
 - **Cero alucinaciones**: el hecho nunca cambia de verbo ni de paciente.
-- **Cantidades que escalan**: 10 → 1000 bandidos; 500 → 1300 m.
+- **Cantidades que escalan solas**: 10 → ~1.100 bandidos; 500 → ~2.000 m, sin tablas
+  manuales por nivel.
 - **6 saltos visibles** con una boca por salto.
 - **Multijugador aislado** por scope, con puentes anonimizados.
 - **Determinista**: misma semilla, misma historia.

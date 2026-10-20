@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
-export default function Logo({ compact = false }) {
+export default function Logo({ compact = false, to = '/' }) {
   const base = import.meta.env.BASE_URL
 
   return (
-    <Link to="/" className={`brand${compact ? ' brand--compact' : ''}`} aria-label="Ecos, inicio">
+    <Link to={to} className={`brand${compact ? ' brand--compact' : ''}`} aria-label="Ecos">
       <span className="brand__mark" aria-hidden="true">
         <img src={`${base}brand/ecos-icon.svg`} alt="" />
       </span>

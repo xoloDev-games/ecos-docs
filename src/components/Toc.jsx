@@ -36,8 +36,14 @@ export function extractHeadings(content) {
   return headings
 }
 
-export default function Toc({ content }) {
+const copy = {
+  es: { title: 'En esta página', aria: 'En esta página' },
+  en: { title: 'On this page', aria: 'On this page' },
+}
+
+export default function Toc({ content, lang = 'es' }) {
   const headings = useMemo(() => extractHeadings(content), [content])
+  const t = copy[lang] ?? copy.es
   const [activeId, setActiveId] = useState(headings[0]?.id ?? '')
 
   useEffect(() => {
@@ -70,8 +76,8 @@ export default function Toc({ content }) {
   if (!headings.length) return null
 
   return (
-    <nav className="docs-toc" aria-label="En esta página">
-      <span className="docs-toc__title">En esta página</span>
+    <nav className="docs-toc" aria-label={t.aria}>
+      <span className="docs-toc__title">{t.title}</span>
       {headings.map((heading) => (
         <a
           key={heading.id}

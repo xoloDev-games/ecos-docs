@@ -131,5 +131,5 @@ rumores distintos.
 ## D. Siguiente parada
 
 - Quieres entero el vocabulario y las variaciones: [05 — Biblioteca y textos](05-BibliotecaYTextos.md).
-- Quieres números que escalan (500→1300 m, 10→1000 bandidos): [06 — Cantidades](06-Cantidades.md).
+- Quieres números que escalan solos (500→2.000 m, 10→~1.100 bandidos): [06 — Cantidades](06-Cantidades.md).
 - Quieres escenarios listos para copiar: [11 — Recetas](11-Recetas.md).

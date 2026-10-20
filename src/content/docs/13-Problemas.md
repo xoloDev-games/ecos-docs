@@ -120,16 +120,22 @@ de la última entrega.
 
 | Causa | Solución |
 | --- | --- |
-| `CantidadBase = 0` y `CantidadesPorNivel` vacío | Declara una. |
-| `UnidadCantidad` vacío | Rellénalo. |
+| `CantidadBase = 0` | Declara la cifra real del hecho. |
+| `UnidadCantidad` vacío | Rellénalo (`metros`, `bandidos`). |
 | La acción usada no es la que crees | Revisa el `accionId` del trigger. |
-| El nivel no tiene valor y la base es 0 | Rellena la posición. |
 
 ### La cifra no escala
 
-- `CantidadesPorNivel` tiene el mismo valor repetido.
 - El eco no está subiendo de nivel (mira `factorDegradacionPorSalto`).
-- La tabla es más corta de 5 y el nivel es alto.
+- Has puesto un `CantidadesPorNivel` con el mismo valor repetido: el override manda
+  sobre la curva automática. Déjalo vacío si quieres la curva.
+- La acción no tiene `CantidadBase` o `UnidadCantidad`.
+
+### La cifra cambia entre NPCs
+
+Es el comportamiento esperado si `VariacionPorOyente` está activo: la curva aplica un
+margen determinista del ±8 % y redondea a cifras naturales. Con la misma semilla, el
+mismo NPC repite la misma cifra. Desactívalo si necesitas una cifra idéntica para todos.
 
 ### El objeto del trigger no aparece
 

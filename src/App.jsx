@@ -11,6 +11,7 @@ function ScrollToTop() {
   const { pathname } = useLocation()
 
   useEffect(() => {
+    document.documentElement.lang = pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'es'
     window.scrollTo(0, 0)
   }, [pathname])
 
@@ -66,7 +67,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/docs" element={<Navigate to="/docs/manual" replace />} />
-          <Route path="/docs/:slug" element={<DocsPage onOpenSearch={() => setSearchOpen(true)} />} />
+          <Route path="/docs/:slug" element={<DocsPage lang="es" onOpenSearch={() => setSearchOpen(true)} />} />
+          <Route path="/en" element={<Navigate to="/en/docs/manual" replace />} />
+          <Route path="/en/docs" element={<Navigate to="/en/docs/manual" replace />} />
+          <Route path="/en/docs/:slug" element={<DocsPage lang="en" onOpenSearch={() => setSearchOpen(true)} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

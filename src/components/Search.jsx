@@ -1,9 +1,34 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowRight, Search as SearchIcon, X } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { docs } from '../docs.js'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { getDocs } from '../docs.js'
 
 const suggestions = ['manual', 'instalacion', 'inicio-rapido', 'modelo', 'recetas', 'api']
+
+const copy = {
+  es: {
+    dialog: 'Buscar en la documentación',
+    close: 'Cerrar búsqueda',
+    placeholder: 'Busca un concepto, una clase, un error…',
+    results: (count) => `${count} resultados`,
+    recommended: 'Páginas recomendadas',
+    empty: (query) => `Sin resultados para “${query}”.`,
+    hint: 'Prueba con “modelo”, “scopes”, “cantidades”, “memoria” o “API”.',
+    first: 'abrir el primer resultado',
+    openClose: 'abrir / cerrar',
+  },
+  en: {
+    dialog: 'Search the documentation',
+    close: 'Close search',
+    placeholder: 'Search a concept, a class, an error…',
+    results: (count) => `${count} results`,
+    recommended: 'Recommended pages',
+    empty: (query) => `No results for “${query}”.`,
+    hint: 'Try “model”, “scopes”, “quantities”, “memory” or “API”.',
+    first: 'open the first result',
+    openClose: 'open / close',
+  },
+}
 
 function stripMarkdown(content) {
   return content
@@ -28,6 +53,11 @@ export default function Search({ open, onClose }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const lang = pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'es'
+  const t = copy[lang]
+  const docs = getDocs(lang)
+  const basePath = lang === 'en' ? '/en/docs' : '/docs'
 
   useEffect(() => {
     if (!open) return
@@ -47,7 +77,7 @@ export default function Search({ open, onClose }) {
         ...doc,
         plain: stripMarkdown(doc.content),
       })),
-    [],
+    [docs],
   )
 
   const results = useMemo(() => {
@@ -77,13 +107,13 @@ export default function Search({ open, onClose }) {
       .sort((a, b) => b.score - a.score)
       .slice(0, 12)
       .map((entry) => entry.doc)
-  }, [index, query])
+  }, [index, query, docs])
 
   if (!open) return null
 
   const go = (slug) => {
     onClose()
-    navigate(`/docs/${slug}`)
+    navigate(`${basePath}/${slug}`)
   }
 
   const onSubmit = (event) => {
@@ -92,8 +122,8 @@ export default function Search({ open, onClose }) {
   }
 
   return (
-    <div className="search-modal" role="dialog" aria-modal="true" aria-label="Buscar en la documentación">
-      <button className="search-modal__overlay" type="button" aria-label="Cerrar búsqueda" onClick={onClose} />
+    <div className="search-modal" role="dialog" aria-modal="true" aria-label={t.dialog}>
+      <button className="search-modal__overlay" type="button" aria-label={t.close} onClick={onClose} />
       <div className="search-panel">
         <form className="search-panel__input" onSubmit={onSubmit}>
           <SearchIcon size={19} />
@@ -101,24 +131,24 @@ export default function Search({ open, onClose }) {
             ref={inputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Busca un concepto, una clase, un error…"
-            aria-label="Buscar en la documentación"
+            placeholder={t.placeholder}
+            aria-label={t.dialog}
           />
-          <button className="icon-button" type="button" onClick={onClose} aria-label="Cerrar búsqueda">
+          <button className="icon-button" type="button" onClick={onClose} aria-label={t.close}>
             <X size={18} />
           </button>
         </form>
 
         <div className="search-panel__meta">
-          <span>{query.trim() ? `${results.length} resultados` : 'Páginas recomendadas'}</span>
+          <span>{query.trim() ? t.results(results.length) : t.recommended}</span>
           <kbd>Esc</kbd>
         </div>
 
         <div className="search-panel__results">
           {results.length === 0 && (
             <div className="search-empty">
-              <strong>Sin resultados para “{query}”.</strong>
-              <p>Prueba con “modelo”, “scopes”, “cantidades”, “memoria” o “API”.</p>
+              <strong>{t.empty(query)}</strong>
+              <p>{t.hint}</p>
             </div>
           )}
 
@@ -134,10 +164,10 @@ export default function Search({ open, onClose }) {
 
         <div className="search-panel__footer">
           <span>
-            <kbd>Enter</kbd> abrir el primer resultado
+            <kbd>Enter</kbd> {t.first}
           </span>
           <span>
-            <kbd>Ctrl</kbd> + <kbd>K</kbd> abrir / cerrar
+            <kbd>Ctrl</kbd> + <kbd>K</kbd> {t.openClose}
           </span>
         </div>
       </div>

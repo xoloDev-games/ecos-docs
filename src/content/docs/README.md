@@ -36,7 +36,7 @@ culpables ni pacientes que el diseñador no haya declarado.
 | [03 — Conceptos](03-Conceptos.md) | Eco, canal, nivel, intención, confianza, saltos. |
 | [04 — Configuración](04-Configuracion.md) | Todas las tuercas, con su efecto esperado. |
 | [05 — Biblioteca y textos](05-BibliotecaYTextos.md) | Sujetos, acciones, objetos, plantillas, atribuciones. |
-| [06 — Cantidades y recuentos](06-Cantidades.md) | La escalera numérica: 500→1300 m, 10→1000 bandidos. |
+| [06 - Cantidades y recuentos](06-Cantidades.md) | La curva automática: 500→2.000 m, 10→~1.100 bandidos. |
 | [07 — Emitir ecos](07-EmitirEcos.md) | Triggers, UnityEvents, código, multijugador. |
 | [08 — Escuchar y reaccionar](08-EscucharYReaccionar.md) | Listeners, memoria de NPC, reacciones, sinks propios. |
 | [09 — NPCs y perfiles](09-NPCsYPerfiles.md) | Personalidad, rasgos, sesgos, memoria. |
@@ -51,9 +51,15 @@ Diagramas:
 - `arquitectura.png` — capas y dependencias.
 - `flujo-eco.png` — ciclo de vida de un eco, de la fuente a la sexta boca.
 
+Manual en inglés: los mismos 14 capítulos están en [`en/README.md`](en/README.md).
+La web pública sirve español en `/docs/...` e inglés en `/en/docs/...`.
+
 El diseño interno y el porqué de cada decisión están en
-[`../ARCHITECTURE.md`](../ARCHITECTURE.md) y
-[`../DESIGN_CONTRADICCIONES.md`](../DESIGN_CONTRADICCIONES.md).
+[`arquitectura-interna.md`](arquitectura-interna.md) y
+[`diseno-contradicciones.md`](diseno-contradicciones.md). El resto de páginas del
+proyecto: [`changelog.md`](changelog.md), [`soporte.md`](soporte.md),
+[`licencia-asset.md`](licencia-asset.md) y
+[`licencias-terceros.md`](licencias-terceros.md).
 
 ---
 

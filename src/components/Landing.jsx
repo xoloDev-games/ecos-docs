@@ -30,35 +30,35 @@ const chain = [
   {
     version: 'v1',
     level: 'Suavizado',
-    text: 'eliminó a una banda de 25 bandidos, con su espada',
+    text: 'eliminó a una banda de ~30 bandidos, con su espada',
     confidence: 96,
     tone: 'clean',
   },
   {
     version: 'v2',
     level: 'Adornado',
-    text: 'eliminó a una hueste de 100 bandidos, sin ayuda de nadie',
+    text: 'eliminó a una hueste de ~90 bandidos, sin ayuda de nadie',
     confidence: 88,
     tone: 'warm',
   },
   {
     version: 'v3',
     level: 'Exagerado',
-    text: 'eliminó a un ejército de 400 bandidos, con las manos desnudas',
+    text: 'eliminó a un ejército de ~350 bandidos, con las manos desnudas',
     confidence: 62,
     tone: 'warm',
   },
   {
     version: 'v4',
     level: 'Distorsionado',
-    text: 'eliminó a un pelotón de 1000 bandidos, con las manos desnudas',
+    text: 'eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas',
     confidence: 39,
     tone: 'hot',
   },
   {
     version: 'v5',
     level: 'Rumor',
-    text: 'eliminó a una horda de 1000 bandidos, sin ningún arma',
+    text: 'eliminó a una horda de ~1.200 bandidos, sin ningún arma',
     confidence: 21,
     tone: 'hot',
   },
@@ -77,8 +77,8 @@ const features = [
   },
   {
     icon: Layers,
-    title: 'Cantidades que escalan',
-    text: 'De 10 a 1000 bandidos, de 500 a 1300 metros. La cifra sube; el verbo no cambia.',
+    title: 'Cantidades automáticas',
+    text: 'De 10 a ~1.100 bandidos, de 500 a 2.000 metros. Declaras la cifra real; la curva hace el resto.',
   },
   {
     icon: Users,
@@ -384,8 +384,8 @@ runtime.Tick(1.0);`}</code>
           <span className="section__kicker">Documentación</span>
           <h2>De la primera escena a la API completa</h2>
           <p>
-            Veinte páginas, catorce capítulos, recetas y referencia. Todo en español, con
-            ejemplos que puedes copiar.
+            Veintiuna páginas, catorce capítulos, recetas y referencia. En español e inglés,
+            con ejemplos que puedes copiar.
           </p>
         </div>
 

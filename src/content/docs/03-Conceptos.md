@@ -106,7 +106,7 @@ regla ya lo sustituye (preset demo).
 
 - El **hecho** es: sujeto + verbo + paciente + **cantidad declarada**.
 - La **degradación** no puede cambiar el verbo ni el paciente, pero **sí** puede:
-  - escalar la cifra declarada (500 → 1300 m; 10 → 1000 bandidos);
+  - escalar la cifra declarada automáticamente (500 → 2.000 m; 10 → 1.100 bandidos);
   - cambiar el colectivo ("un grupo de" → "un pelotón de");
   - cambiar el instrumento ("con su espada" → "con las manos desnudas");
   - añadir énfasis, prefijos, coletillas y color elemental.

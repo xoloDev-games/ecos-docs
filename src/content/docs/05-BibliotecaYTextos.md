@@ -91,9 +91,9 @@ El verbo **ya conjugado** y el dato cuantitativo del hecho.
 | `CantidadBase` | int | Dato cuantitativo base. `0` = sin cantidad. |
 | `UnidadCantidad` | string | `metros`, `bandidos`, `días`. Vacío = no se muestra. |
 | `PreposicionCantidad` | string | `desde`, `a`, `contra`. Vacío = sin preposición. |
-| `CantidadesPorNivel` | int[5] | Cifra exacta por nivel; manda sobre la base. |
-| `ContenedoresPorNivel` | string[5] | Colectivo por nivel (`un grupo de` → `un pelotón de`). |
-| `InstrumentosPorNivel` | string[5] | Instrumento por nivel (`con su espada` → `con las manos desnudas`). |
+| `CantidadesPorNivel` | int[5] | **Override opcional**: cifra exacta por nivel. Normalmente se deja vacío y la curva automática calcula la cifra. |
+| `ContenedoresPorNivel` | string[5] | Colectivo opcional por nivel (`un grupo de` → `un pelotón de`). |
+| `InstrumentosPorNivel` | string[5] | Instrumento opcional por nivel (`con su espada` → `con las manos desnudas`). |
 | `CantidadComoObjeto` | bool | La cantidad sustituye al objeto directo. |
 
 La cantidad se explica a fondo en [06 — Cantidades](06-Cantidades.md).
@@ -273,8 +273,8 @@ Patrón recomendado:
 
 1. Duplica el asset: `EcosBiblioteca_ES` y `EcosBiblioteca_EN`.
 2. Mantén idénticos `Id`, `Categoria`, `IntencionSugerida`, `Valencia`, `Peso` y toda
-   la parte numérica (`CantidadBase`, `CantidadesPorNivel`, `ContenedoresPorNivel`,
-   `InstrumentosPorNivel`).
+   la parte numérica (`CantidadBase`; `CantidadesPorNivel` sólo si usas el override,
+   `ContenedoresPorNivel` e `InstrumentosPorNivel`).
 3. Traduce sólo lo visible: `Nombre`, `NombreVago`, `VerboSingular`, `VerboPlural`,
    `UnidadCantidad`, `Prefijos`, `Sufijos`, `Adverbios`, `Plantillas`, atribuciones y
    coletillas.
@@ -306,9 +306,10 @@ sigue usando `Genero` para los artículos españoles. Rellena los artículos ing
 2. `VerboSingular` y `VerboPlural` conjugados (no infinitivos).
 3. `Categoria` existente en el registro (o vacía para usar embeddings).
 4. `Valencia` y `Peso` si quieres que mueva la ficha del sujeto.
-5. Si lleva cifra: `CantidadBase`, `UnidadCantidad` y, si quieres control total,
-   `CantidadesPorNivel`.
-6. Si la cifra es el paciente: `CantidadComoObjeto = true` + `ContenedoresPorNivel`.
+5. Si lleva cifra: `CantidadBase` y `UnidadCantidad`. La curva automática hace el resto;
+   `CantidadesPorNivel` sólo si necesitas cifras exactas por nivel.
+6. Si la cifra es el paciente: `CantidadComoObjeto = true` y, opcionalmente,
+   `ContenedoresPorNivel`.
 7. Si lleva instrumento: `InstrumentosPorNivel` (5 entradas).
 8. `Invalidar()` si editas en runtime.
 9. Prueba en `Window ▸ Ecos ▸ Consola de Ecos ▸ Laboratorio de frases`.

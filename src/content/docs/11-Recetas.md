@@ -40,10 +40,10 @@ Consola, cada 2 s:
 
 ```
 v0  @JugadorA  eliminó a un grupo de 10 bandidos, con su espada        Literal        conf 1.00
-v1  NPC 1      eliminó a una banda de 25 bandidos, con su espada       Suavizado      conf 0.96
-v2  NPC 2      eliminó a una hueste de 100 bandidos, sin ayuda...      Adornado       conf 0.88
-v3  NPC 3      eliminó a un ejército de 400 bandidos, con las manos... Exagerado      conf 0.62
-v4  NPC 4      eliminó a un pelotón de 1000 bandidos, con las manos... Distorsionado  conf 0.39
+v1  NPC 1      eliminó a una banda de ~30 bandidos, con su espada      Suavizado      conf 0.96
+v2  NPC 2      eliminó a una hueste de ~95 bandidos, sin ayuda...      Adornado       conf 0.88
+v3  NPC 3      eliminó a un ejército de ~350 bandidos, con las manos... Exagerado     conf 0.62
+v4  NPC 4      eliminó a un pelotón de ~1.100 bandidos, con las manos... Distorsionado conf 0.39
 v5  NPC 5      ...                                                     Distorsionado  conf 0.20
 v6  NPC 6      ...                                                     Distorsionado  conf 0.08
 ```
@@ -70,24 +70,24 @@ new EcosAccion
     Categoria = "larga_distancia",
     CantidadBase = 500,
     UnidadCantidad = "metros",
-    PreposicionCantidad = "desde",
-    CantidadesPorNivel = new[] { 500, 700, 900, 1100, 1300 },
+    PreposicionCantidad = "desde"
+    // Sin CantidadesPorNivel: la curva automática calcula 500, 750, 1.000, 1.400 y 2.000.
     Valencia = -70,
     Peso = 0.85f
 }
 ```
 
-**Resultado esperado:** 500 → 700 → 900 → 1100 → 1300 m. La confianza cae, pero el
-relato sigue siendo plausible. Si usas la base × factor (sin tabla), saldría
-500 → 700 → 900 → 1100 → 1300 exactamente (1,0/1,4/1,8/2,2/2,6), así que la tabla sólo
-es necesaria si quieres una curva distinta.
+**Resultado esperado:** 500 → 750 → 1.000 → 1.400 → 2.000 m. La confianza cae, pero el
+relato sigue siendo plausible. La curva de medidas es más suave que la de recuentos para
+que un disparo no acabe en 50.000 m.
 
-**Variación:** para un arma mágica, `{ 500, 900, 1500, 2400, 4000 }` y sube
-`factorDegradacionPorSalto` para que el nivel llegue antes.
+**Variación:** para un arma mágica, usa `CantidadesPorNivel = new[] { 500, 900, 1500,
+2400, 4000 }` y sube `factorDegradacionPorSalto` para que el nivel llegue antes. El
+override es opcional: sólo lo necesitas si quieres una escalera exacta.
 
 ---
 
-## Receta 3 — La hazaña de los 1000 bandidos
+## Receta 3 — La hazaña de los ~1.100 bandidos
 
 **Objetivo:** el ejemplo canónico del rumor.
 
@@ -102,7 +102,7 @@ new EcosAccion
     CantidadBase = 10,
     UnidadCantidad = "bandidos",
     CantidadComoObjeto = true,
-    CantidadesPorNivel = new[] { 10, 25, 100, 400, 1000 },
+    // Sin tabla de cifras: 10 -> ~30 -> ~90 -> ~350 -> ~1.100.
     ContenedoresPorNivel = new[]
     {
         "un grupo de", "una banda de", "una hueste de", "un ejército de", "un pelotón de"
@@ -121,14 +121,15 @@ new EcosAccion
 
 ```
 "eliminó a un grupo de 10 bandidos, con su espada"
-"eliminó a una banda de 25 bandidos, con su espada"
-"eliminó a una hueste de 100 bandidos, sin ayuda de nadie"
-"eliminó a un ejército de 400 bandidos, con las manos desnudas"
-"eliminó a un pelotón de 1000 bandidos, con las manos desnudas"
+"eliminó a una banda de ~30 bandidos, con su espada"
+"eliminó a una hueste de ~90 bandidos, sin ayuda de nadie"
+"eliminó a un ejército de ~350 bandidos, con las manos desnudas"
+"eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas"
 ```
 
-**Por qué funciona:** el verbo y el paciente (los bandidos) no cambian; sólo la cifra,
-el colectivo y el instrumento, todos declarados por el diseñador.
+**Por qué funciona:** el verbo y el paciente (los bandidos) no cambian; la cifra la
+calcula la curva automática y el colectivo/instrumento son datos opcionales del
+diseñador.
 
 ---
 
@@ -238,8 +239,8 @@ void Awake()
 
 **Resultado esperado:**
 
-- ES: "eliminó a un pelotón de 1000 bandidos, con las manos desnudas".
-- EN: "killed a platoon of 1000 bandits bare-handed".
+- ES: "eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas".
+- EN: "killed a platoon of ~1,100 bandits bare-handed".
 
 El modelo multilingüe mapea "killed" y "eliminó" a la misma categoría, así que las
 afinidades y el color no cambian de idioma.
@@ -481,7 +482,7 @@ un cambio de plantilla se aplica también a las partidas guardadas.
 
 ## Receta 14 — Debug sin escena
 
-**Objetivo:** probar una escalera de cantidades sin entrar en Play.
+**Objetivo:** probar la curva automática de cantidades sin entrar en Play.
 
 1. `Window ▸ Ecos ▸ Consola de Ecos`.
 2. En el **Laboratorio de frases**, escribe acción, objeto y sujeto.
@@ -489,7 +490,7 @@ un cambio de plantilla se aplica también a las partidas guardadas.
 4. Pulsa **Generar**.
 
 **Resultado esperado:** la frase para cada combinación, sin propagación. Es la forma
-más rápida de validar una tabla de cantidades o una plantilla nueva.
+más rápida de validar la curva automática, un override o una plantilla nueva.
 
 ---
 
@@ -498,8 +499,8 @@ más rápida de validar una tabla de cantidades o una plantilla nueva.
 | Quiero... | Receta | Mando clave |
 | --- | --- | --- |
 | Cadena de 6 visible | 1 | `maxSaltos=6`, `maxContagiosPorEco=1`, `contagioGarantizado=true` |
-| Exagerar una distancia | 2 | `CantidadesPorNivel` suave |
-| Exagerar un recuento | 3 | `CantidadComoObjeto` + `ContenedoresPorNivel` |
+| Exagerar una distancia | 2 | `CantidadBase` + curva automática (u override suave) |
+| Exagerar un recuento | 3 | `CantidadBase` + `CantidadComoObjeto` + contenedor opcional |
 | Ocultar al culpable | 4 | `saltosParaAnonimizar` |
 | Aislar jugadores | 5 | scopes + puentes |
 | Bilingüe | 6 | dos bibliotecas con los mismos ids |

@@ -452,22 +452,23 @@ Prueba funcional end-to-end (fuera del proyecto Unity, ejecutando sólo `Core`):
 - **La CANTIDAD es el único dato que se exagera, y es un dato declarado.** «Magnificar la
   magnitud» era hasta ahora un multiplicador invisible (`Intensidad`). `EcosAccion.CantidadBase`,
   `UnidadCantidad` y `PreposicionCantidad` convierten la magnitud en una cifra que viaja en la
-  frase: «desde 500 metros» (Literal) → 700 → 900 → 1100 → «desde 1300 metros» (Distorsionado),
-  con la misma curva `EcosNiveles.FactorMagnitud` que usa la degradación para la intensidad.
-  Sigue siendo *Cero Alucinaciones*: el diseñador declara la cifra real y el sistema sólo la
-  escala; verbo y paciente no cambian. `{magnitud}` prefiere la cifra al adjetivo de banda y, si
-  la plantilla del nivel no tiene el hueco, el compositor **lo inyecta tras el objeto**: la
-  cantidad es dato, no adorno, así que no puede desaparecer a mitad de cadena. Cubierto por
-  `tests/Composicion/CantidadTests.cs`.
-- **Un recuento escala con colectivo e instrumento, no sólo con la cifra.** `CantidadesPorNivel`
-  (5 enteros), `ContenedoresPorNivel` y `InstrumentosPorNivel` (5 textos) convierten «un grupo de
-  10 bandidos, con su espada» en «un pelotón de 1000 bandidos, con las manos desnudas»: la
-  escalada es abrupta si el diseñador la declara (10 → 1000), no un ×2,6 ciego. Con
-  `CantidadComoObjeto` la cantidad **sustituye al paciente** («eliminó a un pelotón de 1000
-  bandidos»), de modo que el dato es el objeto gramatical; si es `false`, la cifra viaja como
-  cláusula («..., desde 500 metros»). El instrumento se cuelga del objeto para que ninguna
-  plantilla lo pierda. Todo sale del diccionario de la acción: el rumor exagera el dato, nunca
-  inventa el verbo.
+  frase. `EcosEscaladorCantidades` calcula la curva automática a partir del nivel, la intensidad,
+  la intención y el oyente: «desde 500 metros» (Literal) → 750 → 1.000 → 1.400 → «desde 2.000
+  metros» (Distorsionado). Sigue siendo *Cero Alucinaciones*: el diseñador declara la cifra real
+  y el sistema sólo la transforma; verbo y paciente no cambian. `{magnitud}` prefiere la cifra al
+  adjetivo de banda y, si la plantilla del nivel no tiene el hueco, el compositor **lo inyecta
+  tras el objeto**: la cantidad es dato, no adorno, así que no puede desaparecer a mitad de
+  cadena. Cubierto por `tests/Composicion/CantidadTests.cs`.
+- **Un recuento escala con colectivo e instrumento, no sólo con la cifra.** `CantidadBase` es el
+  único número obligatorio; `ContenedoresPorNivel` e `InstrumentosPorNivel` (5 textos) son
+  opcionales y convierten «un grupo de 10 bandidos, con su espada» en «un pelotón de ~1.100
+  bandidos, con las manos desnudas». La cifra sale de la curva automática de recuentos (10 → 30 →
+  90 → 350 → ~1.100), no de una tabla escrita a mano. `CantidadesPorNivel` sigue existiendo como
+  override exacto para casos especiales. Con `CantidadComoObjeto` la cantidad **sustituye al
+  paciente** («eliminó a un pelotón de ~1.100 bandidos»), de modo que el dato es el objeto
+  gramatical; si es `false`, la cifra viaja como cláusula («..., desde 500 metros»). El
+  instrumento se cuelga del objeto para que ninguna plantilla lo pierda. Todo sale del
+  diccionario de la acción: el rumor exagera el dato, nunca inventa el verbo.
 - **Los hechos de la demo viven en el Core, no en la escena.** `EcosHechosDeDemo` declara los
   cinco hechos (verbo conjugado + paciente con artículo + cantidad + categoría de género) y
   `EcosHechosDeDemo.CrearBibliotecaDeDemo()` los monta sobre la biblioteca por defecto. El
