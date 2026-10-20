@@ -343,7 +343,8 @@ Esto es deliberado: el asset debe funcionar offline y en consolas/móvil sin bac
 
 El paquete **no incluye** el modelo ni el tokenizador, así que no los redistribuye. Si tú
 los incluyes en tu build o en otro producto, cumple sus licencias. Consulta
-[Terceros y modelo](licencias-terceros).
+`Third Party Notices.md` en la raíz del paquete y
+[terceros y modelo](https://xolodev-games.github.io/ecos-docs/docs/licencias-terceros).
 
 ---
 

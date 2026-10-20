@@ -75,10 +75,11 @@ arrastraría dependencia de Unity.
 
 ### Por qué `Runtime/Modelos` queda vacío
 
-La distribución de la Asset Store **no incluye pesos**. La carpeta existe para que el
-comprador deje ahí su `model.onnx` y su tokenizador; el constructor de demo los localiza
-por tipo (`model t:ModelAsset`) tanto si están en `Runtime/Modelos` como si están en
-`Assets/Ecos/Modelos`. Si no hay modelo, el bootstrap usa el proveedor hash.
+La distribución de la Asset Store **no incluye pesos**. La carpeta del paquete es de solo
+lectura y sólo contiene un `LEEME.txt`; el comprador deja su `model.onnx` y su tokenizador
+en `Assets/Ecos/Modelos`. El constructor de demo los localiza por tipo
+(`model t:ModelAsset`) tanto si están en el proyecto como si están dentro del paquete. Si
+no hay modelo, el bootstrap usa el proveedor hash y la demo se construye igualmente.
 
 La variante de desarrollo (`empaquetar.ps1` sin `-SinModelo`) sí puede incluir el FP16
 para validación interna, pero **no es la variante que se sube a la tienda**.
