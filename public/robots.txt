@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://xolodev-games.github.io/ecos-docs/sitemap.xml

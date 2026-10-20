@@ -1,0 +1,32 @@
+{
+  "name": "ecos-docs",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Documentación pública de Ecos, el motor de rumores para NPCs de Unity.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "github-slugger": "^2.0.0",
+    "highlight.js": "^11.11.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.9.6",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-highlight": "^7.0.2",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.0",
+    "vite": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

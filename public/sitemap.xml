@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://xolodev-games.github.io/ecos-docs/</loc><priority>1.0</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/manual</loc><priority>0.9</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/instalacion</loc><priority>0.9</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/inicio-rapido</loc><priority>0.9</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/conceptos</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/configuracion</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/biblioteca</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/cantidades</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/emitir</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/escuchar</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/npcs</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/modelo</loc><priority>0.9</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/recetas</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/api</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/arquitectura</loc><priority>0.7</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/diseno</loc><priority>0.7</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/problemas</loc><priority>0.8</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/empaquetado</loc><priority>0.6</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/changelog</loc><priority>0.6</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/soporte</loc><priority>0.7</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/licencia-asset</loc><priority>0.5</priority></url>
+  <url><loc>https://xolodev-games.github.io/ecos-docs/docs/licencias-terceros</loc><priority>0.5</priority></url>
+</urlset>

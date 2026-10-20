@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0e14" />
+    <meta
+      name="description"
+      content="Documentación de Ecos: propagación y degradación de rumores para NPCs en Unity. Instalación, configuración, modelo semántico, recetas y referencia de API."
+    />
+    <meta property="og:title" content="Ecos — Documentación" />
+    <meta
+      property="og:description"
+      content="El mismo hecho. Seis versiones. Un motor de rumores determinista para NPCs de Unity."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="%BASE_URL%brand/ecos-keyart.png" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%brand/ecos-icon.svg" />
+    <title>Ecos — Documentación</title>
+    <script>
+      ;(() => {
+        const saved = localStorage.getItem('ecos-theme')
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved
+        }
+        const base = '/ecos-docs/'
+        const match = window.location.search.match(/[?&]r=([^&]+)/)
+        if (match && window.location.pathname.startsWith(base)) {
+          const target = decodeURIComponent(match[1]).replace(/^\/+/, '')
+          window.history.replaceState(null, '', base + target)
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
