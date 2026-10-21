@@ -24,7 +24,7 @@ Ventajas:
 ## 2. Estructura del paquete
 
 ```
-com.xolodev.ecos/
+dev.xolodev.ecos/
 ├── package.json
 ├── README.md
 ├── README.es.md
@@ -100,7 +100,7 @@ assets.
 
 ```json
 {
-  "name": "com.xolodev.ecos",
+  "name": "dev.xolodev.ecos",
   "version": "1.2.0",
   "displayName": "Ecos — Rumor Propagation & Degradation",
   "description": "Propagación boca a boca de rumores entre NPCs con degradación procedural, cantidades escalables y cero alucinaciones. Multilingüe ES/EN, Edge AI, determinista.",
@@ -182,7 +182,7 @@ Opciones:
 
 El script:
 
-1. Limpia `dist/com.xolodev.ecos`.
+1. Limpia `dist/dev.xolodev.ecos`.
 2. Copia Core, Runtime, Editor y Docs.
 3. Con `-SinModelo`, escribe `Runtime/Modelos/LEEME.txt` y no copia pesos.
 4. Sin `-SinModelo`, copia el FP16 y el tokenizador para desarrollo.
@@ -191,7 +191,7 @@ El script:
    y `Third Party Notices`.
 7. Genera un `.meta` determinista para cada asset (Unity ignora los assets sin `.meta`
    dentro de un paquete inmutable).
-8. Crea `dist/com.xolodev.ecos-<version>.tgz` con la carpeta `package/` en la raíz.
+8. Crea `dist/dev.xolodev.ecos-<version>.tgz` con la carpeta `package/` en la raíz.
 9. Escribe `dist/README.md` (instrucciones de entrega) y `dist/SHA256.txt`.
 
 ---

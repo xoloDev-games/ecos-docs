@@ -4,7 +4,7 @@ Sitio público de documentación de **Ecos**, el motor de propagación y degrada
 rumores para NPCs de Unity.
 
 - Sitio: <https://xolodev-games.github.io/ecos-docs/>
-- Asset: `com.xolodev.ecos` v1.1.0
+- Asset: `dev.xolodev.ecos` v1.2.0
 - Unity mínimo: **6.3 LTS (6000.3)**
 - Modelo semántico: **opcional, no incluido**
 

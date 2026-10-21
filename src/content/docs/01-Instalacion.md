@@ -23,7 +23,7 @@
 
 ## 2. Instalación como paquete (recomendada)
 
-1. Descarga `com.xolodev.ecos-1.2.0.tgz`.
+1. Descarga `dev.xolodev.ecos-1.2.0.tgz`.
 2. En Unity: **Window ▸ Package Manager ▸ + ▸ Add package from tarball…**
 3. Selecciona el `.tgz`.
 4. Acepta la instalación de la dependencia `com.unity.ai.inference` si te la pide.

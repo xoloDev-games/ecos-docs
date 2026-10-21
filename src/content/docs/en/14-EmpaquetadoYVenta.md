@@ -25,7 +25,7 @@ Advantages:
 ## 2. Package structure
 
 ```
-com.xolodev.ecos/
+dev.xolodev.ecos/
 ├── package.json
 ├── README.md
 ├── README.es.md
@@ -101,7 +101,7 @@ assets.
 
 ```json
 {
-  "name": "com.xolodev.ecos",
+  "name": "dev.xolodev.ecos",
   "version": "1.2.0",
   "displayName": "Ecos — Rumor Propagation & Degradation",
   "description": "Propagación boca a boca de rumores entre NPCs con degradación procedural, cantidades escalables y cero alucinaciones. Multilingüe ES/EN, Edge AI, determinista.",
@@ -183,7 +183,7 @@ Options:
 
 The script:
 
-1. Cleans `dist/com.xolodev.ecos`.
+1. Cleans `dist/dev.xolodev.ecos`.
 2. Copies Core, Runtime, Editor and Docs.
 3. With `-SinModelo`, writes `Runtime/Modelos/LEEME.txt` and does not copy weights.
 4. Without `-SinModelo`, copies the FP16 and the tokenizer for development.
@@ -192,7 +192,7 @@ The script:
    and `Third Party Notices`.
 7. Generates a deterministic `.meta` for each asset (Unity ignores assets without `.meta`
    inside an immutable package).
-8. Creates `dist/com.xolodev.ecos-<version>.tgz` with the `package/` folder at the root.
+8. Creates `dist/dev.xolodev.ecos-<version>.tgz` with the `package/` folder at the root.
 9. Writes `dist/README.md` (delivery instructions) and `dist/SHA256.txt`.
 
 ---
