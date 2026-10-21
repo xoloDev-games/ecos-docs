@@ -102,7 +102,7 @@ assets.
 ```json
 {
   "name": "com.xolodev.ecos",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "displayName": "Ecos — Rumor Propagation & Degradation",
   "description": "Propagación boca a boca de rumores entre NPCs con degradación procedural, cantidades escalables y cero alucinaciones. Multilingüe ES/EN, Edge AI, determinista.",
   "unity": "6000.3",
@@ -119,7 +119,7 @@ assets.
   "samples": [
     {
       "displayName": "Demo (6 saltos)",
-      "description": "Escena generada con 5 hechos, 6 NPCs y cadenas visibles.",
+      "description": "Escena generada con 6 hechos, 6 NPCs y cadenas visibles.",
       "path": "Samples~/Demo"
     }
   ]
@@ -178,7 +178,7 @@ Options:
 ```powershell
 .\empaquetar.ps1 -SinModelo             # sin pesos (BYO model) — usar para la tienda
 .\empaquetar.ps1 -SinTar                # sólo la carpeta, sin .tgz
-.\empaquetar.ps1 -Version 1.1.0         # cambia la versión SemVer
+.\empaquetar.ps1 -Version 1.2.0         # cambia la versión SemVer
 ```
 
 The script:
@@ -277,9 +277,12 @@ Update:
 
 ### What to highlight in the listing
 
-- **Zero Hallucinations**: the fact never changes its verb or its patient.
-- **Quantities that scale on their own**: 10 → ~1,100 bandits; 500 → ~2,000 m, without manual
-  per-level tables.
+- **Zero Hallucinations**: no variant is generated; the inverse one is declared and the
+  original fact is preserved.
+- **Quantities that rise and fall on their own**: 10 → 2 → 110 bandits; 500 → 450 →
+  1,800 m, without manual per-level tables.
+- **Declared narrative turn**: `regicidio` → `salvar_rey` at Distorted, with original-fact
+  traceability.
 - **6 visible hops** with one mouth per hop.
 - **Multiplayer isolated** by scope, with anonymized bridges.
 - **Deterministic**: same seed, same story.

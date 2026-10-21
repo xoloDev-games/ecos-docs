@@ -42,7 +42,7 @@ public documentation repository. Include the page and the exact snippet.
 
 ## Project status
 
-- Documented version: **1.1.0**
+- Documented version: **1.2.0**
 - Minimum Unity: **6.3 LTS (6000.3)**
 - Model: **optional, not included**
 - Asset license: commercial, see [Asset license](licencia-asset)

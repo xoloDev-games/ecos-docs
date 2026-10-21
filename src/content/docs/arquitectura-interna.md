@@ -11,7 +11,7 @@ Namespace raíz: **`xoloDev.Ecos`** · Dominio puro: **`xoloDev.Ecos.Core`**
 
 | Principio                     | Cómo se cumple                                                                                                                                                                                                             |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Cero alucinaciones**        | Ningún modelo escribe texto. El eco es un hecho discreto (`SujetoId + AccionId + ObjetoId + Nivel + Intencion`) y la frase la arma un compositor procedural desde **diccionarios**. El modelo ligero sólo clasifica enums. |
+| **Cero alucinaciones**        | Ningún modelo escribe texto. El eco es un hecho discreto (`SujetoId + AccionId + ObjetoId + Nivel + Intencion`) y la frase la arma un compositor procedural desde **diccionarios**. El modelo opcional aporta embeddings para el mapeo elemental; nivel e intención son clasificadores enchufables. |
 | **Multijugador 1..N aislado** | Cada etiqueta (`EcosScope`) tiene su propio canal: cola de eventos, grafo de rumores y censo de NPCs. Dos jugadores nunca se ven sin un **puente explícito**.                                                              |
 | **Determinismo total**        | Nada usa `UnityEngine.Random` ni `string.GetHashCode`. Todo sale de `EcosRng` (xorshift32) + `EcosHasher` (FNV-1a). Misma semilla = misma historia. `ModoSemilla` elige entre semilla fija (replay/continuar) y aleatoria por sesión; dentro de la sesión todo sigue siendo reproducible. |
 | **Apto para Edge**            | Heurísticas de fábrica sin IA, techos duros (`MaxEventosPorTick`, `MaxSaltos`, `MaxContagiosPorEco`, `MaxNodosPorCanal`), structs `readonly` para evitar GC y reglas que se pueden desactivar.                                                   |
@@ -169,8 +169,9 @@ ganancias de diseño), `EcosTablaAfinidad` (matriz data-driven elemento↔elemen
 `EcosBibliotecaFragmentos` (diccionarios de acciones/objetos + dataset español),
 `EcosFragmentosDatos` (datos por defecto), `EcosCompositorProcedural` (`Normalizar` + marca
 invisible para proteger la caja del sujeto; arma _Sujeto + Acción + Nivel + Intención_),
-`EcosHechosDeDemo` (los cinco hechos de la escena de demo como datos: verbo + paciente +
-cantidad, y `CrearBibliotecaDeDemo()` para los tests headless).
+`EcosHechosDeDemo` (los seis hechos de la escena de demo como datos: verbo + paciente +
+cantidad, y `CrearBibliotecaDeDemo()` para los tests headless). Incluye el par
+`regicidio`/`salvar_rey` para probar la inversión.
 
 ### Runtime — Unity (`Scripts/Runtime`)
 
@@ -278,14 +279,19 @@ public class MiBootstrap : EcosBootstrap
                Path.Combine(Application.streamingAssetsPath, "Modelos/model.onnx"),
                Path.Combine(Application.streamingAssetsPath, "Modelos/sentencepiece.bpe.model.bytes"));
 
-    // CrearDegradador() y CrearClasificadorIntencion() NO se sobrescriben: los de fábrica
-    // (EcosDegradadorHeuristico / EcosClasificadorIntencionHeuristico) son los definitivos.
+    // CrearDegradador() y CrearClasificadorIntencion() no se sobrescriben aquí: los de
+    // fábrica (EcosDegradadorHeuristico / EcosClasificadorIntencionHeuristico) son el
+    // fallback. Un BYOM con cabezal de clasificación puede sobrescribirlos.
 }
 ```
 
 Contratos a implementar: `IEcosProveedorEmbeddings`, `IEcosDegradador`,
 `IEcosClasificadorIntencion`, `IEcosFiltroContagio`, `IEcosMapeadorSemantico`. El resto del
-sistema sólo conoce las interfaces.
+sistema sólo conoce las interfaces. El `EcosBootstrapSentis` incluido sólo sustituye el
+proveedor de embeddings; para un modelo BYOM que también clasifique nivel o intención,
+sobrescribe `CrearDegradador()`/`CrearClasificadorIntencion()` o usa
+`EcosRuntimeBuilder.ConDegradador`/`ConClasificadorIntencion`. Un modelo nunca devuelve
+texto: sólo enums, ids o vectores, y si no está listo se vuelve al fallback.
 
 ### 7.1 Modelo de embeddings (multilingüe) — el "Motor Semántico Universal"
 
@@ -384,7 +390,7 @@ Prueba funcional end-to-end (fuera del proyecto Unity, ejecutando sólo `Core`):
   sólido sobre la 2ª categoría (≥ 0.15 exigido; medido 0.26–0.56) y sin contaminación cruzada
   (`tests/Semantica/MotorSemanticoUniversalTests.cs`). Es la garantía de que el Core sirve para
   Terror, Shooter, Plataformas y RPG sin ramas específicas.
-- **5 niveles** de exageración con magnitud numérica creciente.
+- **5 niveles** de exageración con magnitud **no monótona** (puede bajar y volver a subir).
 - **Determinismo**: misma semilla → misma frase byte a byte.
 
 ---
@@ -445,39 +451,43 @@ Prueba funcional end-to-end (fuera del proyecto Unity, ejecutando sólo `Core`):
   recorren Literal → Suavizado → Adornado → Exagerado → Distorsionado, el nombre se anonimiza
   («Aldric» → «alguien») y la confianza cae de 1,00 a ~0,14. Cubierto por
   `tests/Composicion/EscaladaTests.cs` y `DemoMirrorTests`.
-- **El eco es el mismo hecho: lo que cambia es cómo se cuenta.** Por diseño (*Cero
-  Alucinaciones*) ni el compositor ni el degradador inventan un verbo o un paciente nuevos: un
-  «se ocultó en el casillero» nunca se convierte en «mató a alguien». La deformación es nivel,
-  intención, magnitud, adornos, anonimización y credibilidad.
-- **La CANTIDAD es el único dato que se exagera, y es un dato declarado.** «Magnificar la
-  magnitud» era hasta ahora un multiplicador invisible (`Intensidad`). `EcosAccion.CantidadBase`,
-  `UnidadCantidad` y `PreposicionCantidad` convierten la magnitud en una cifra que viaja en la
-  frase. `EcosEscaladorCantidades` calcula la curva automática a partir del nivel, la intensidad,
-  la intención y el oyente: «desde 500 metros» (Literal) → 750 → 1.000 → 1.400 → «desde 2.000
-  metros» (Distorsionado). Sigue siendo *Cero Alucinaciones*: el diseñador declara la cifra real
-  y el sistema sólo la transforma; verbo y paciente no cambian. `{magnitud}` prefiere la cifra al
-  adjetivo de banda y, si la plantilla del nivel no tiene el hueco, el compositor **lo inyecta
-  tras el objeto**: la cantidad es dato, no adorno, así que no puede desaparecer a mitad de
-  cadena. Cubierto por `tests/Composicion/CantidadTests.cs`.
+- **El eco conserva el hecho original; la versión contada puede girar.** Por diseño (*Cero
+  Alucinaciones*) ni el compositor ni el degradador inventan texto: un «se ocultó en el
+  casillero» no se convierte en «mató a alguien» salvo que exista una variante declarada. La
+  deformación normal es nivel, intención, magnitud, adornos, anonimización y credibilidad. En
+  Distorsionado, `EcosReglaDeformacionNarrativa` puede cambiar a `AccionInversaId` (por ejemplo,
+  «regicidio» → «salvar_rey»), pero guarda `AccionOriginalId`/`ObjetoOriginalId` para auditar el
+  hecho. Cubierto por `CantidadTests.Un_regicidio_puede_atenuarse_y_luego_invertirse`.
+- **La CANTIDAD sube y baja, y es un dato declarado.** `EcosAccion.CantidadBase`,
+  `UnidadCantidad`, `PreposicionCantidad` y `CantidadEsRecuento` convierten la magnitud en una
+  cifra que viaja en la frase. `EcosEscaladorCantidades` calcula una curva automática a partir
+  del nivel, la dirección, la intensidad, la intención y el oyente: «desde 500 metros» (Literal)
+  → 450 → 850 → 1.200 → «desde 1.800 metros» (Distorsionado). El descenso es deliberado: el
+  nivel Suavizado pierde detalle. Sigue siendo *Cero Alucinaciones*: el diseñador declara la
+  cifra real y el sistema sólo la transforma. `{magnitud}` prefiere la cifra al adjetivo de banda
+  y, si la plantilla del nivel no tiene el hueco, el compositor **lo inyecta tras el objeto**: la
+  cantidad es dato, no adorno, así que no puede desaparecer a mitad de cadena. Cubierto por
+  `tests/Composicion/CantidadTests.cs`.
 - **Un recuento escala con colectivo e instrumento, no sólo con la cifra.** `CantidadBase` es el
   único número obligatorio; `ContenedoresPorNivel` e `InstrumentosPorNivel` (5 textos) son
-  opcionales y convierten «un grupo de 10 bandidos, con su espada» en «un pelotón de ~1.100
-  bandidos, con las manos desnudas». La cifra sale de la curva automática de recuentos (10 → 30 →
-  90 → 350 → ~1.100), no de una tabla escrita a mano. `CantidadesPorNivel` sigue existiendo como
+  opcionales y convierten «un grupo de 10 bandidos, con su espada» en «un pelotón de 110
+  bandidos, con las manos desnudas». La cifra sale de la curva automática de recuentos (10 → 2 →
+  35 → 70 → 110), no de una tabla escrita a mano. `CantidadesPorNivel` sigue existiendo como
   override exacto para casos especiales. Con `CantidadComoObjeto` la cantidad **sustituye al
-  paciente** («eliminó a un pelotón de ~1.100 bandidos»), de modo que el dato es el objeto
-  gramatical; si es `false`, la cifra viaja como cláusula («..., desde 500 metros»). El
+  paciente** («eliminó a un pelotón de 110 bandidos»), de modo que el dato es el objeto
+  gramatical; si es `false`, la cifra viaja como cláusula («..., desde 1.800 metros»). El
   instrumento se cuelga del objeto para que ninguna plantilla lo pierda. Todo sale del
-  diccionario de la acción: el rumor exagera el dato, nunca inventa el verbo.
+  diccionario de la acción: el rumor deforma el dato, nunca inventa el verbo.
 - **Los hechos de la demo viven en el Core, no en la escena.** `EcosHechosDeDemo` declara los
-  cinco hechos (verbo conjugado + paciente con artículo + cantidad + categoría de género) y
+  seis hechos (verbo conjugado + paciente con artículo + cantidad + categoría de género) y
   `EcosHechosDeDemo.CrearBibliotecaDeDemo()` los monta sobre la biblioteca por defecto. El
   builder los refresca en el asset en cada reconstrucción
   (`EcosBibliotecaAsset.AgregarHechosDeDemo`) sin tocar el resto del vocabulario, así que los
   tests headless reproducen la cadena de la escena
   (`DemoMirrorTests.La_cantidad_del_hecho_se_exagera_a_lo_largo_de_la_cadena`). Las acciones de
   la demo declaran además su categoría de género, de modo que el mapeador elemental acierta por
-  **atajo** (coste cero) en vez de depender de los embeddings.
+  **atajo** (coste cero) en vez de depender de los embeddings. El par `regicidio`/`salvar_rey`
+  demuestra la inversión declarada.
 - **Contracciones del español en la normalización.** El compositor une un verbo que acaba en
   preposición («eliminó a») con un objeto que empieza por artículo («el objetivo»), y sin la
   regla salía «eliminó a el objetivo». `Normalizar` aplica `a el → al` y `de el → del` al final,

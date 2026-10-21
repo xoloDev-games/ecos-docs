@@ -40,16 +40,16 @@ Consola, cada 2 s:
 
 ```
 v0  @JugadorA  eliminó a un grupo de 10 bandidos, con su espada        Literal        conf 1.00
-v1  NPC 1      eliminó a una banda de ~30 bandidos, con su espada      Suavizado      conf 0.96
-v2  NPC 2      eliminó a una hueste de ~95 bandidos, sin ayuda...      Adornado       conf 0.88
-v3  NPC 3      eliminó a un ejército de ~350 bandidos, con las manos... Exagerado     conf 0.62
-v4  NPC 4      eliminó a un pelotón de ~1.100 bandidos, con las manos... Distorsionado conf 0.39
+v1  NPC 1      eliminó a una banda de ~2 bandidos, con su espada       Suavizado      conf 0.96
+v2  NPC 2      eliminó a una hueste de ~35 bandidos, sin ayuda...      Adornado       conf 0.88
+v3  NPC 3      eliminó a un ejército de ~70 bandidos, con las manos... Exagerado     conf 0.62
+v4  NPC 4      eliminó a un pelotón de ~110 bandidos, con las manos... Distorsionado conf 0.39
 v5  NPC 5      ...                                                     Distorsionado  conf 0.20
 v6  NPC 6      ...                                                     Distorsionado  conf 0.08
 ```
 
 Las frases exactas dependen de las plantillas y de la semilla; lo importante es que
-**la cifra, el colectivo y el instrumento escalan** y la confianza cae.
+**la cifra baja y luego sube, el colectivo y el instrumento cambian** y la confianza cae.
 
 **Si sólo llega a 3-4 saltos:** falta `contagioGarantizado` o `maxContagiosPorEco = 1`.
 **Si todos los NPCs muestran lo mismo:** falta `soloCuandoSoyElNarrador`.
@@ -71,15 +71,15 @@ new EcosAccion
     CantidadBase = 500,
     UnidadCantidad = "metros",
     PreposicionCantidad = "desde"
-    // Sin CantidadesPorNivel: la curva automática calcula 500, 750, 1.000, 1.400 y 2.000.
+    // Sin CantidadesPorNivel: la curva automática calcula 500, 450, 850, 1.200 y 1.800.
     Valencia = -70,
     Peso = 0.85f
 }
 ```
 
-**Resultado esperado:** 500 → 750 → 1.000 → 1.400 → 2.000 m. La confianza cae, pero el
-relato sigue siendo plausible. La curva de medidas es más suave que la de recuentos para
-que un disparo no acabe en 50.000 m.
+**Resultado esperado:** 500 → 450 → 850 → 1.200 → 1.800 m. La confianza cae, el nivel
+Suavizado pierde detalle y los niveles altos recuperan la magnitud. La curva de medidas es
+más suave que la de recuentos para que un disparo no acabe en 50.000 m.
 
 **Variación:** para un arma mágica, usa `CantidadesPorNivel = new[] { 500, 900, 1500,
 2400, 4000 }` y sube `factorDegradacionPorSalto` para que el nivel llegue antes. El
@@ -87,7 +87,7 @@ override es opcional: sólo lo necesitas si quieres una escalera exacta.
 
 ---
 
-## Receta 3 — La hazaña de los ~1.100 bandidos
+## Receta 3 — La hazaña de los 110 bandidos
 
 **Objetivo:** el ejemplo canónico del rumor.
 
@@ -102,7 +102,7 @@ new EcosAccion
     CantidadBase = 10,
     UnidadCantidad = "bandidos",
     CantidadComoObjeto = true,
-    // Sin tabla de cifras: 10 -> ~30 -> ~90 -> ~350 -> ~1.100.
+    // Sin tabla de cifras: 10 -> ~2 -> ~35 -> ~70 -> ~110.
     ContenedoresPorNivel = new[]
     {
         "un grupo de", "una banda de", "una hueste de", "un ejército de", "un pelotón de"
@@ -121,15 +121,21 @@ new EcosAccion
 
 ```
 "eliminó a un grupo de 10 bandidos, con su espada"
-"eliminó a una banda de ~30 bandidos, con su espada"
-"eliminó a una hueste de ~90 bandidos, sin ayuda de nadie"
-"eliminó a un ejército de ~350 bandidos, con las manos desnudas"
-"eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas"
+"eliminó a una banda de ~2 bandidos, con su espada"
+"eliminó a una hueste de ~35 bandidos, sin ayuda de nadie"
+"eliminó a un ejército de ~70 bandidos, con las manos desnudas"
+"eliminó a un pelotón de ~110 bandidos, con las manos desnudas"
 ```
 
 **Por qué funciona:** el verbo y el paciente (los bandidos) no cambian; la cifra la
 calcula la curva automática y el colectivo/instrumento son datos opcionales del
 diseñador.
+
+**Si quieres que el relato gire:** añade `AccionInversaId` a la acción original y declara
+la variante opuesta. Por ejemplo, `regicidio` (10 soldados) → `salvar_rey` (100 soldados,
+preposición `contra`). En Distorsionado, `EcosReglaDeformacionNarrativa` cambia la acción,
+el objeto y la valencia, pero conserva `AccionOriginalId`. La variante es texto declarado,
+no generado; ver [06 — Cantidades](06-Cantidades.md#4-inversión-cuando-el-relato-gira).
 
 ---
 
@@ -239,8 +245,8 @@ void Awake()
 
 **Resultado esperado:**
 
-- ES: "eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas".
-- EN: "killed a platoon of ~1,100 bandits bare-handed".
+- ES: "eliminó a un pelotón de ~110 bandidos, con las manos desnudas".
+- EN: "killed a platoon of ~110 bandits bare-handed".
 
 El modelo multilingüe mapea "killed" y "eliminó" a la misma categoría, así que las
 afinidades y el color no cambian de idioma.

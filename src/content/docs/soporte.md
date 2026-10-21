@@ -42,7 +42,7 @@ repositorio público de documentación. Incluye la página y el fragmento exacto
 
 ## Estado del proyecto
 
-- Versión documentada: **1.1.0**
+- Versión documentada: **1.2.0**
 - Unity mínimo: **6.3 LTS (6000.3)**
 - Modelo: **opcional, no incluido**
 - Licencia del asset: comercial, ver [Licencia del asset](licencia-asset)

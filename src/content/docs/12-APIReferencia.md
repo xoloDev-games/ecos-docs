@@ -16,11 +16,14 @@ La unidad que viaja. Campos:
 | `Id` | int | Único y monótono; se conserva en la cadena. |
 | `Scope` | `EcosScope` | Canal de aislamiento. |
 | `SujetoId` | string | `@JugadorA`, `@Herrero`. |
-| `AccionId` | string | `quemar`, `diezmar_bandidos`. |
+| `AccionId` | string | `quemar`, `diezmar_bandidos`; puede ser la variante inversa. |
 | `ObjetoId` | string | `aldea`, `@Nadie`. |
+| `AccionOriginalId` | string | Acción del hecho original; se conserva tras una inversión. |
+| `ObjetoOriginalId` | string | Objeto del hecho original. |
 | `Intensidad` | int 0..100 | Magnitud real del hecho. |
 | `Nivel` | `EcosNivelExageracion` | Literal..Distorsionado. |
 | `Intencion` | `EcosIntencion` | Neutral..Lamento. |
+| `DireccionDeformacion` | `EcosDireccionDeformacion` | Neutro, Atenuar, Exagerar o Invertir. |
 | `CategoriaId` | int | -1 = sin clasificar. |
 | `Confianza` | float 0..1 | Credibilidad. |
 | `Tiempo` | double | Reloj de simulación. |
@@ -35,6 +38,7 @@ Métodos:
 | Método | Devuelve | Para qué |
 | --- | --- | --- |
 | `EstaVivo(EcosConfiguracion)` | bool | Confianza ≥ umbral y saltos ≤ máximo. |
+| `EsInversion` | bool | `AccionId` ya no coincide con `AccionOriginalId`. |
 | `Derivar(...)` | `EcoEvento` | Copia con cambios; null = conserva. |
 | `Resumen()` | string | Línea de log. |
 
@@ -48,6 +52,7 @@ Propiedades: `Kind`, `Id`. Igualdad por valor.
 | Tipo | Valores |
 | --- | --- |
 | `EcosNivelExageracion` | Literal, Suavizado, Adornado, Exagerado, Distorsionado |
+| `EcosDireccionDeformacion` | Neutro, Atenuar, Exagerar, Invertir |
 | `EcosIntencion` | Neutral, Advertencia, Alarde, Chisme, Amenaza, Lamento |
 | `EcosScopeKind` | Global, Jugador, Faccion, Lugar, Grupo, Sistema |
 | `EcosGenero` | Masculino, Femenino, Neutro |
@@ -65,6 +70,8 @@ Utilidades:
 | `EcosNiveles.Credibilidad(nivel)` | 1,00 / 0,85 / 0,70 / 0,45 / 0,25 |
 | `EcosNiveles.DesdePresion(float)` | Convierte presión en nivel. |
 | `EcosNiveles.Etiqueta(nivel)` | Nombre legible. |
+| `EcosDirecciones.Cantidad` | 4 |
+| `EcosDirecciones.Etiqueta(direccion)` | Neutro / Atenuar / Exagerar / Invertir. |
 | `EcosIntenciones.Cantidad` | 6 |
 | `EcosIntenciones.Etiqueta(intencion)` | Nombre legible. |
 | `EcosSemillaSesion.Nueva()` | Semilla nueva para una sesión (runtime). |
@@ -114,7 +121,16 @@ Todos los campos públicos con sus valores por defecto. Ver
 | `EcosCompositorProcedural` | `Componer(in eco, oyente)` | Frase final. |
 | | `Planificar(in eco, oyente)` | `EcosPlanFrase` con slots. |
 | `EcosPlanFrase` | `Sujeto`, `Verbo`, `Objeto`, `Cantidad`, `Atribucion`, `Coletilla`, `Prefijo`, `Adverbio`, `Magnitud`, `Color`, `Sufijo`, `Plantilla`, `Texto` | Piezas. |
+| | `Direccion` | Dirección efectiva: atenuar, exagerar o invertir. |
 | | `AccionDesconocida`, `SujetoAnonimizado` | Diagnóstico. |
+
+### `EcosEscaladorCantidades`
+
+| Miembro | Para qué |
+| --- | --- |
+| `Calcular(accion, in eco, variarPorOyente, ref rng)` | Cifra automática para el nivel y la dirección actuales. |
+| `DireccionSugerida(nivel, intencion)` | Dirección por defecto (Suavizado atenúa; Lamento atenúa; resto exagera). |
+| `TieneTablaExplicita(accion)` | True si `CantidadesPorNivel` sustituye a la curva. |
 
 ### `EcosRegistroCategorias`
 
@@ -212,6 +228,7 @@ requiereMismoPaciente)`, `Resumen()`.
 | --- | --- | --- |
 | `EcosReglaAnonimizacion` | 50 | `SujetoId = @Desconocido` desde `SaltosParaAnonimizar`. |
 | `EcosReglaDegradacion` | 100 | Nivel + intención + confianza. |
+| `EcosReglaDeformacionNarrativa` | 120 | En Distorsionado, cambia a la variante `AccionInversaId` si existe. |
 | `EcosReglaContradiccion` | 150 | Penaliza creencias incompatibles. |
 | `EcosReglaAfinidadElemental` | 200 | Afinidad modula magnitud/credibilidad. |
 | `EcosReglaSesgoNarrador` | 300 | Sesgos del narrador. |

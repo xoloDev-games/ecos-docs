@@ -14,14 +14,18 @@ Namespace raíz: `xoloDev.Ecos` · Dominio puro: `xoloDev.Ecos.Core`
 
 - Un NPC vive un hecho ("el herrero quemó la aldea").
 - El hecho se contagia boca a boca entre los NPCs de un canal.
-- En cada salto el relato **deforma**: añade adornos, pierde detalle, exagera las
+- En cada salto el relato **deforma**: añade adornos, pierde detalle, sube o baja las
   cantidades, cambia la intención y baja la credibilidad.
+- En Distorsionado puede girar a una **variante inversa declarada** ("cometió regicidio"
+  → "intentó salvar al rey"), conservando el hecho original para auditarlo.
 - El texto final lo redacta un **compositor procedural** desde diccionarios.
 
 **No es** un generador de texto con IA. Ningún modelo escribe la frase.
-El modelo ligero (opcional) sólo clasifica dos enums: *nivel de exageración* e
-*intención*. Esto es la regla **Cero Alucinaciones**: el juego nunca inventa verbos,
-culpables ni pacientes que el diseñador no haya declarado.
+El modelo ligero (opcional) aporta embeddings para mapear acciones a categorías
+elementales; el *nivel de exageración* y la *intención* los deciden clasificadores
+deterministas que también puedes sustituir por los tuyos (BYOM). Esto es la regla **Cero
+Alucinaciones**: el juego nunca inventa verbos, culpables ni pacientes que el diseñador no
+haya declarado.
 
 ![Arquitectura](arquitectura.png)
 
@@ -36,7 +40,7 @@ culpables ni pacientes que el diseñador no haya declarado.
 | [03 — Conceptos](03-Conceptos.md) | Eco, canal, nivel, intención, confianza, saltos. |
 | [04 — Configuración](04-Configuracion.md) | Todas las tuercas, con su efecto esperado. |
 | [05 — Biblioteca y textos](05-BibliotecaYTextos.md) | Sujetos, acciones, objetos, plantillas, atribuciones. |
-| [06 - Cantidades y recuentos](06-Cantidades.md) | La curva automática: 500→2.000 m, 10→~1.100 bandidos. |
+| [06 - Cantidades y recuentos](06-Cantidades.md) | Curva no monótona: 500→450→1.800 m; inversión declarada. |
 | [07 — Emitir ecos](07-EmitirEcos.md) | Triggers, UnityEvents, código, multijugador. |
 | [08 — Escuchar y reaccionar](08-EscucharYReaccionar.md) | Listeners, memoria de NPC, reacciones, sinks propios. |
 | [09 — NPCs y perfiles](09-NPCsYPerfiles.md) | Personalidad, rasgos, sesgos, memoria. |

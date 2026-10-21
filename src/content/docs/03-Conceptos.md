@@ -16,11 +16,13 @@ SujetoId + AccionId + ObjetoId + Nivel + Intencion + Intensidad + Confianza + Sa
 - Es **inmutable**: cada salto produce una copia derivada con `Derivar(...)`.
 - Conserva su `Id` a lo largo de la cadena (es el *mismo* rumor, contado distinto).
 
-**Qué cambia al propagarse:** `Nivel`, `Intencion`, `Intensidad`, `Confianza`,
-`Saltos`, `NarradorId`, `Semilla`. **Qué NO cambia nunca:** `AccionId` y `ObjetoId` (el
-verbo y el paciente). `SujetoId` sólo cambia a `@Desconocido` por la regla de
-anonimización. Ese es el contrato de *Cero Alucinaciones*: se deforma el relato, no la
-identidad del hecho.
+**Qué cambia al propagarse:** `Nivel`, `Intencion`, `DireccionDeformacion`, `Intensidad`,
+`Confianza`, `Saltos`, `NarradorId`, `Semilla`. En la deformación normal, `AccionId` y
+`ObjetoId` (verbo y paciente) se conservan. En Distorsionado pueden cambiar a una variante
+inversa declarada (`AccionInversaId`/`ObjetoInversoId`); el hecho original queda en
+`AccionOriginalId`/`ObjetoOriginalId`. `SujetoId` sólo cambia a `@Desconocido` por la
+regla de anonimización. Ese es el contrato de *Cero Alucinaciones*: se deforma el relato,
+pero toda variante está declarada y el hecho original sigue siendo auditable.
 
 ## 2. Canal (`EcosScope`) — aislamiento
 
@@ -76,7 +78,7 @@ resto Distorsionado.
 `Neutral`, `Advertencia`, `Alarde`, `Chisme`, `Amenaza`, `Lamento`.
 
 Determina **plantilla + atribución + coletilla**. "Yo lo vi con estos ojos" o "qué
-desgracia" son voces; el hecho sigue siendo el mismo. El clasificador de intención es
+desgracia" son voces; el hecho sigue siendo el mismo salvo que exista una variante inversa declarada. El clasificador de intención es
 heurístico (barato); no usa el modelo.
 
 ## 5. Confianza / credibilidad (`Confianza`)
@@ -105,14 +107,16 @@ regla ya lo sustituye (preset demo).
 ## 7. Dato vs. adorno (la clave de este asset)
 
 - El **hecho** es: sujeto + verbo + paciente + **cantidad declarada**.
-- La **degradación** no puede cambiar el verbo ni el paciente, pero **sí** puede:
-  - escalar la cifra declarada automáticamente (500 → 2.000 m; 10 → 1.100 bandidos);
-  - cambiar el colectivo ("un grupo de" → "un pelotón de");
-  - cambiar el instrumento ("con su espada" → "con las manos desnudas");
-  - añadir énfasis, prefijos, coletillas y color elemental.
+- La **degradación** puede atenuar o exagerar la cifra (10 → 2 → 35 → 70 → 110; 500 →
+  450 → 850 → 1.200 → 1.800), cambiar el colectivo, cambiar el instrumento y añadir
+  énfasis, prefijos, coletillas y color elemental.
+- En el nivel **Distorsionado**, si la acción declara `AccionInversaId`, el relato puede
+  girar a una variante opuesta escrita a mano ("cometió regicidio" → "intentó salvar al
+  rey"). El hecho original queda en `AccionOriginalId`; la variante nunca se genera.
 
-Eso es un rumor de verdad: **el dato se deforma, la identidad del hecho no**. Detalle
-completo en [06 — Cantidades](06-Cantidades.md).
+Eso es un rumor de verdad: **el dato se deforma y, a veces, la versión que se cuenta
+gira; el hecho original sigue siendo auditable**. Detalle completo en
+[06 — Cantidades](06-Cantidades.md).
 
 ---
 

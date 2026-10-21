@@ -57,8 +57,9 @@ Menú **`Assets ▸ Create ▸ Ecos ▸ Conjunto completo de assets`** crea de g
 > componente, así que nada choca con `NullReferenceException` en `Awake`.
 >
 > **No necesitas modelo para completar este tutorial.** El paquete no incluye pesos; el
-> fallback hash permite probar toda la cadena. El modelo sólo mejora la clasificación
-> semántica. Ver [10 — Modelo semántico](10-SemanticaONNX.md).
+> fallback hash permite probar toda la cadena. El modelo sólo mejora el mapeo semántico de
+> categorías; nivel e intención siguen siendo clasificadores deterministas. Ver
+> [10 — Modelo semántico](10-SemanticaONNX.md).
 
 ### Paso 3 — El jugador (2 objetos/componentes)
 
@@ -131,5 +132,5 @@ rumores distintos.
 ## D. Siguiente parada
 
 - Quieres entero el vocabulario y las variaciones: [05 — Biblioteca y textos](05-BibliotecaYTextos.md).
-- Quieres números que escalan solos (500→2.000 m, 10→~1.100 bandidos): [06 — Cantidades](06-Cantidades.md).
+- Quieres números que suben y bajan (500→450→1.800 m; 10→2→110 bandidos) y una inversión declarada: [06 — Cantidades](06-Cantidades.md).
 - Quieres escenarios listos para copiar: [11 — Recetas](11-Recetas.md).

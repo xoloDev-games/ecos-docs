@@ -11,7 +11,7 @@ Root namespace: **`xoloDev.Ecos`** · Pure domain: **`xoloDev.Ecos.Core`**
 
 | Principle                     | How it is met                                                                                                                                                                                                             |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Zero Hallucinations**       | No model writes text. The echo is a discrete fact (`SujetoId + AccionId + ObjetoId + Nivel + Intencion`) and the sentence is assembled by a procedural composer from **dictionaries**. The lightweight model only classifies enums. |
+| **Zero Hallucinations**       | No model writes text. The echo is a discrete fact (`SujetoId + AccionId + ObjetoId + Nivel + Intencion`) and the sentence is assembled by a procedural composer from **dictionaries**. The optional model provides embeddings for elemental mapping; level and intention are pluggable classifiers. |
 | **Isolated 1..N multiplayer** | Each tag (`EcosScope`) has its own channel: event queue, rumor graph, and NPC census. Two players never see each other without an **explicit bridge**.                                                              |
 | **Total determinism**         | Nothing uses `UnityEngine.Random` or `string.GetHashCode`. Everything comes from `EcosRng` (xorshift32) + `EcosHasher` (FNV-1a). Same seed = same story. `ModoSemilla` chooses between a fixed seed (replay/continue) and a random one per session; within the session everything remains reproducible. |
 | **Edge-ready**                | Factory heuristics without AI, hard ceilings (`MaxEventosPorTick`, `MaxSaltos`, `MaxContagiosPorEco`, `MaxNodosPorCanal`), `readonly` structs to avoid GC, and rules that can be disabled.                                                   |
@@ -169,8 +169,9 @@ design gains), `EcosTablaAfinidad` (data-driven element↔element matrix),
 `EcosBibliotecaFragmentos` (action/object dictionaries + Spanish dataset),
 `EcosFragmentosDatos` (default data), `EcosCompositorProcedural` (`Normalizar` + an
 invisible mark to protect the subject's slot; assembles _Subject + Action + Level + Intention_),
-`EcosHechosDeDemo` (the five facts of the demo scene as data: verb + patient +
-quantity, and `CrearBibliotecaDeDemo()` for the headless tests).
+`EcosHechosDeDemo` (the six facts of the demo scene as data: verb + patient +
+quantity, and `CrearBibliotecaDeDemo()` for the headless tests). It includes the
+`regicidio`/`salvar_rey` pair to test inversion.
 
 ### Runtime — Unity (`Scripts/Runtime`)
 
@@ -278,14 +279,19 @@ public class MiBootstrap : EcosBootstrap
                Path.Combine(Application.streamingAssetsPath, "Modelos/model.onnx"),
                Path.Combine(Application.streamingAssetsPath, "Modelos/sentencepiece.bpe.model.bytes"));
 
-    // CrearDegradador() and CrearClasificadorIntencion() are NOT overridden: the built-in
-    // ones (EcosDegradadorHeuristico / EcosClasificadorIntencionHeuristico) are final.
+    // CrearDegradador() and CrearClasificadorIntencion() are not overridden here: the
+    // built-ins (EcosDegradadorHeuristico / EcosClasificadorIntencionHeuristico) are the
+    // fallback. A BYOM with a classification head can override them.
 }
 ```
 
 Contracts to implement: `IEcosProveedorEmbeddings`, `IEcosDegradador`,
 `IEcosClasificadorIntencion`, `IEcosFiltroContagio`, `IEcosMapeadorSemantico`. The rest of the
-system only knows the interfaces.
+system only knows the interfaces. The included `EcosBootstrapSentis` only replaces the
+embeddings provider; for a BYOM model that also classifies level or intention, override
+`CrearDegradador()`/`CrearClasificadorIntencion()` or use
+`EcosRuntimeBuilder.ConDegradador`/`ConClasificadorIntencion`. A model never returns text:
+only enums, ids or vectors, and if it is not ready the fallback takes over.
 
 ### 7.1 Embeddings model (multilingual) — the "Universal Semantic Engine"
 
@@ -384,7 +390,7 @@ End-to-end functional test (outside the Unity project, running only `Core`):
   margin over the 2nd category (≥ 0.15 required; measured 0.26–0.56) and without cross-contamination
   (`tests/Semantica/MotorSemanticoUniversalTests.cs`). It is the guarantee that the Core works for
   Horror, Shooter, Platforms, and RPG without specific branches.
-- **5 levels** of exaggeration with increasing numeric magnitude.
+- **5 levels** of exaggeration with **non-monotonic** magnitude (it can fall and rise again).
 - **Determinism**: same seed → same sentence, byte for byte.
 
 ---
@@ -445,39 +451,42 @@ End-to-end functional test (outside the Unity project, running only `Core`):
   run through Literal → Smoothed → Adorned → Exaggerated → Distorted, the name is anonymized
   (“Aldric” → “alguien”) and confidence drops from 1,00 to ~0,14. Covered by
   `tests/Composicion/EscaladaTests.cs` and `DemoMirrorTests`.
-- **The echo is the same fact: what changes is how it is told.** By design (*Zero
-  Hallucinations*) neither the composer nor the degrader invents a new verb or patient: a
-  “se ocultó en el casillero” never becomes “mató a alguien”. Deformation is level,
-  intention, magnitude, adornments, anonymization, and credibility.
-- **QUANTITY is the only datum that gets exaggerated, and it is a declared datum.** “Magnifying the
-  magnitude” was until now an invisible multiplier (`Intensidad`). `EcosAccion.CantidadBase`,
-  `UnidadCantidad`, and `PreposicionCantidad` turn the magnitude into a figure that travels in the
-  sentence. `EcosEscaladorCantidades` computes the automatic curve from level, intensity,
-  intention, and listener: “desde 500 metros” (Literal) → 750 → 1.000 → 1.400 → “desde 2.000
-  metros” (Distorted). It is still *Zero Hallucinations*: the designer declares the real figure
-  and the system only transforms it; verb and patient do not change. `{magnitud}` prefers the figure
-  over the band adjective and, if the level's template does not have the slot, the composer **injects
-  it after the object**: quantity is data, not adornment, so it cannot disappear halfway through the
-  chain. Covered by `tests/Composicion/CantidadTests.cs`.
+- **The echo preserves the original fact; the version being told can turn.** By design (*Zero
+  Hallucinations*) neither the composer nor the degrader invents text: a «se ocultó en el
+  casillero» does not become «mató a alguien» unless a declared variant exists. Normal
+  deformation is level, intention, magnitude, adornments, anonymization, and credibility. At
+  Distorted, `EcosReglaDeformacionNarrativa` can switch to `AccionInversaId` (for example,
+  «regicidio» → «salvar_rey»), but it keeps `AccionOriginalId`/`ObjetoOriginalId` to audit the
+  fact. Covered by `CantidadTests.Un_regicidio_puede_atenuarse_y_luego_invertirse`.
+- **QUANTITY rises and falls, and it is a declared datum.** `EcosAccion.CantidadBase`,
+  `UnidadCantidad`, `PreposicionCantidad`, and `CantidadEsRecuento` turn the magnitude into a
+  figure that travels in the sentence. `EcosEscaladorCantidades` computes an automatic curve
+  from level, direction, intensity, intention, and listener: «desde 500 metros» (Literal) →
+  450 → 850 → 1,200 → «desde 1.800 metros» (Distorted). The drop is deliberate: the Smoothed
+  level loses detail. It is still *Zero Hallucinations*: the designer declares the real figure
+  and the system only transforms it. `{magnitud}` prefers the figure over the band adjective
+  and, if the level's template does not have the slot, the composer **injects it after the
+  object**: quantity is data, not adornment, so it cannot disappear halfway through the chain.
+  Covered by `tests/Composicion/CantidadTests.cs`.
 - **A head count scales with collective and instrument, not just with the figure.** `CantidadBase` is the
   only mandatory number; `ContenedoresPorNivel` and `InstrumentosPorNivel` (5 texts) are
-  optional and turn “un grupo de 10 bandidos, con su espada” into “un pelotón de ~1.100
-  bandidos, con las manos desnudas”. The figure comes from the automatic head-count curve (10 → 30 →
-  90 → 350 → ~1.100), not from a hand-written table. `CantidadesPorNivel` still exists as an
+  optional and turn «un grupo de 10 bandidos, con su espada» into «un pelotón de 110
+  bandidos, con las manos desnudas». The figure comes from the automatic head-count curve (10 → 2 →
+  35 → 70 → 110), not from a hand-written table. `CantidadesPorNivel` still exists as an
   exact override for special cases. With `CantidadComoObjeto` the quantity **replaces the
-  patient** (“eliminó a un pelotón de ~1.100 bandidos”), so that the datum is the grammatical
-  object; if it is `false`, the figure travels as a clause (“..., desde 500 metros”). The
+  patient** («eliminó a un pelotón de 110 bandidos»), so that the datum is the grammatical
+  object; if it is `false`, the figure travels as a clause («..., desde 1.800 metros»). The
   instrument hangs off the object so that no template loses it. Everything comes from the
-  action's dictionary: the rumor exaggerates the datum, it never invents the verb.
+  action's dictionary: the rumor deforms the datum, it never invents the verb.
 - **The demo facts live in the Core, not in the scene.** `EcosHechosDeDemo` declares the
-  five facts (conjugated verb + patient with article + quantity + genre category) and
+  six facts (conjugated verb + patient with article + quantity + genre category) and
   `EcosHechosDeDemo.CrearBibliotecaDeDemo()` mounts them on the default library. The
   builder refreshes them in the asset on every rebuild
   (`EcosBibliotecaAsset.AgregarHechosDeDemo`) without touching the rest of the vocabulary, so the
   headless tests reproduce the scene's chain
   (`DemoMirrorTests.La_cantidad_del_hecho_se_exagera_a_lo_largo_de_la_cadena`). The demo actions
   also declare their genre category, so that the elemental mapper gets it right by
-  **shortcut** (zero cost) instead of depending on the embeddings.
+  **shortcut** (zero cost) instead of depending on the embeddings. The `regicidio`/`salvar_rey` pair demonstrates declared inversion.
 - **Spanish contractions in normalization.** The composer joins a verb that ends in
   a preposition (“eliminó a”) with an object that starts with an article (“el objetivo”), and without the
   rule it produced “eliminó a el objetivo”. `Normalizar` applies `a el → al` and `de el → del` at the end,

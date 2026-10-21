@@ -42,7 +42,7 @@ import soporteEn from './content/docs/en/soporte.md?raw'
 import licenciaAssetEn from './content/docs/en/licencia-asset.md?raw'
 import licenciasTercerosEn from './content/docs/en/licencias-terceros.md?raw'
 
-export const VERSION = '1.1.0'
+export const VERSION = '1.2.0'
 export const UNITY_MIN = '6.3 LTS (6000.3)'
 
 const entries = [

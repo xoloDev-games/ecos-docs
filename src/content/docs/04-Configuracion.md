@@ -144,7 +144,9 @@ Y se convierte en nivel con las bandas:
 | `< 0.86` | Exagerado |
 | `≥ 0.86` | Distorsionado |
 
-El degradador es **monótono** (trinquete): el eco nunca "mejora" al viajar.
+El degradador es **monótono** (trinquete): el nivel del eco nunca "mejora" al viajar. La
+cifra sí puede bajar dentro de un nivel (por ejemplo, Suavizado atenúa) y volver a subir en
+el siguiente; la monotonía es del nivel, no de la cantidad.
 
 | Valor | Cadena de 6 saltos esperada |
 | --- | --- |

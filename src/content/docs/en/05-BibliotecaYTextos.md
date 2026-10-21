@@ -91,10 +91,13 @@ The verb **already conjugated** and the quantitative data of the deed.
 | `CantidadBase` | int | Base quantitative data. `0` = no quantity. |
 | `UnidadCantidad` | string | `metros`, `bandidos`, `días`. Empty = not shown. |
 | `PreposicionCantidad` | string | `desde`, `a`, `contra`. Empty = no preposition. |
+| `CantidadEsRecuento` | bool | The figure is a head count even when stated separately (`..., con 10 soldados`). |
 | `CantidadesPorNivel` | int[5] | **Optional override**: exact figure per level. Usually left empty and the automatic curve computes the figure. |
 | `ContenedoresPorNivel` | string[5] | Optional collective per level (`un grupo de` → `un pelotón de`). |
 | `InstrumentosPorNivel` | string[5] | Optional instrument per level (`con su espada` → `con las manos desnudas`). |
 | `CantidadComoObjeto` | bool | The quantity replaces the direct object. |
+| `AccionInversaId` | string | Declared opposite variant for the Distorted level (`regicidio` → `salvar_rey`). Empty = no inversion. |
+| `ObjetoInversoId` | string | Object of the inverse variant. Empty = keep the echo's object. |
 
 The quantity is explained in depth in [06 — Quantities](06-Cantidades.md).
 
@@ -128,7 +131,9 @@ With `objetoId = pozo` and the default template:
 | Distorted | "El herrero envenenó el pozo con ayuda del demonio… y nadie hizo nada." |
 
 The exact words depend on your `Prefijos`, `Sufijos`, `Adverbios` lists and on
-the template; what matters is that **the verb and the patient do not change**.
+the template. This example has no inversion: the verb and the patient are preserved.
+If the action declares `AccionInversaId`, the Distorted level can switch to the opposite
+variant, always hand-authored in the library.
 
 ---
 

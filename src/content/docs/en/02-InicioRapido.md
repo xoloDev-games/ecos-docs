@@ -58,7 +58,8 @@ Menu **`Assets ▸ Create ▸ Ecos ▸ Conjunto completo de assets`** creates at
 >
 > **You do not need a model to complete this tutorial.** The package does not include weights;
 > the hash fallback lets you test the whole chain. The model only improves semantic
-> classification. See [10 — Semantic model](10-SemanticaONNX.md).
+> category mapping; level and intention remain deterministic classifiers. See
+> [10 — Semantic model](10-SemanticaONNX.md).
 
 ### Step 3 — The player (2 objects/components)
 
@@ -130,5 +131,5 @@ production**: randomness is what makes each playthrough have different rumors.
 ## D. Next stop
 
 - If you want the full vocabulary and variations: [05 — Library and texts](05-BibliotecaYTextos.md).
-- If you want numbers that scale on their own (500→2.000 m, 10→~1.100 bandits): [06 — Quantities](06-Cantidades.md).
+- If you want numbers that rise and fall (500→450→1,800 m; 10→2→110 bandits) and a declared inversion: [06 — Quantities](06-Cantidades.md).
 - If you want ready-to-copy scenarios: [11 — Recipes](11-Recetas.md).

@@ -320,6 +320,81 @@ The provider discovers the input/output names (`input_ids`, `attention_mask`,
 use. If your model uses a different scheme, review `ResolverNombres` and `ProcesarTanda`.
 **It is not guaranteed** for architectures other than BERT/XLM-R.
 
+### 9.1. BYOM: bring your own model
+
+BYOM (*Bring Your Own Model*) means Ecos does not force you to use MiniLM or Sentis. The
+extension points are Core interfaces; the composer, propagation and quantity curve do not
+know which technology is behind them.
+
+| Contract | What it decides | Output |
+| --- | --- | --- |
+| `IEcosDegradador` | Exaggeration level after a mouth. | `EcosNivelExageracion` (5 classes). |
+| `IEcosClasificadorIntencion` | Intention with which it is told. | `EcosIntencion` (6 classes). |
+| `IEcosProveedorEmbeddings` | Vector of an action/sentence for elemental mapping. | `EcosVector` + `Dimension` + `UmbralSimilitudSugerido`. |
+| `IEcosProveedorEmbeddingsLote` | Optional: resolve many keys at once. | Fills an array of `EcosVector`. |
+| `IEcosMapeadorSemantico` | Action -> registered category. | `categoriaId` + `puntuacion`, or `false`. |
+| `IEcosReglaPropagacion` | Complete pipeline rule. | Derived `EcoEvento`. |
+
+Minimal custom classifier:
+
+```csharp
+using xoloDev.Ecos.Core;
+
+public sealed class MiDegradador : IEcosDegradador
+{
+    public EcosNivelExageracion Evaluar(in EcoEvento eco, in EcosContextoPropagacion contexto)
+    {
+        // Your model returns 5 probabilities; pick the class here.
+        // Do not return text: only the enum.
+        return EcosNivelExageracion.Adornado;
+    }
+}
+
+public sealed class MiIntencion : IEcosClasificadorIntencion
+{
+    public EcosIntencion Clasificar(in EcoEvento eco, in EcosContextoPropagacion contexto)
+    {
+        return EcosIntencion.Advertencia;
+    }
+}
+```
+
+Plug it in without touching the rest:
+
+```csharp
+var runtime = new EcosRuntimeBuilder()
+    .ConBiblioteca(EcosBibliotecaFragmentos.CrearPorDefecto())
+    .ConCategorias(EcosRegistroCategorias.CrearPorDefecto())
+    .ConDegradador(new MiDegradador())
+    .ConClasificadorIntencion(new MiIntencion())
+    .ConProveedorEmbeddings(new MiProveedor()) // optional
+    .Construir();
+```
+
+If you use the scene component, subclass `EcosBootstrap` and override `CrearDegradador()`,
+`CrearClasificadorIntencion()` or `CrearProveedorEmbeddings()`. The included
+`EcosBootstrapSentis` only replaces the embeddings provider; it keeps the level and
+intention heuristics. For a model that also classifies, use your own subclass or the
+builder.
+
+Rules for a healthy BYOM:
+
+- **The model does not return sentences.** Only enums, ids, probabilities or vectors. Text
+  still comes from the library.
+- **If the model is not ready, fall back.** `EstaListo = false` or a load error must not
+  crash the game; return to the hash provider or the heuristic.
+- **Calibrate the threshold with your categories.** `UmbralSimilitudSugerido` belongs to
+  the provider, not the mapper. A threshold copied from another model may accept noise.
+- **Be deterministic.** Same input and same seed must give the same label. If your model
+  samples, set temperature 0 or expose a controlled seed.
+- **Do not download weights at runtime.** The store package contains no weights and makes
+  no network calls. If you distribute your own model, respect its license and size; a
+  `.onnx` of hundreds of MB may exceed the Asset Store's 700 MB limit when added to the
+  rest of the package.
+- **Custom pipeline:** if you replace the whole pipeline, add
+  `new EcosReglaDeformacionNarrativa(biblioteca)` after degradation or inversion will not
+  happen.
+
 ---
 
 ## 10. Privacy and network

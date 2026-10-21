@@ -40,16 +40,17 @@ Console, every 2 s:
 
 ```
 v0  @JugadorA  eliminó a un grupo de 10 bandidos, con su espada        Literal        conf 1.00
-v1  NPC 1      eliminó a una banda de ~30 bandidos, con su espada      Suavizado      conf 0.96
-v2  NPC 2      eliminó a una hueste de ~95 bandidos, sin ayuda...      Adornado       conf 0.88
-v3  NPC 3      eliminó a un ejército de ~350 bandidos, con las manos... Exagerado     conf 0.62
-v4  NPC 4      eliminó a un pelotón de ~1.100 bandidos, con las manos... Distorsionado conf 0.39
+v1  NPC 1      eliminó a una banda de ~2 bandidos, con su espada       Suavizado      conf 0.96
+v2  NPC 2      eliminó a una hueste de ~35 bandidos, sin ayuda...      Adornado       conf 0.88
+v3  NPC 3      eliminó a un ejército de ~70 bandidos, con las manos... Exagerado     conf 0.62
+v4  NPC 4      eliminó a un pelotón de ~110 bandidos, con las manos... Distorsionado conf 0.39
 v5  NPC 5      ...                                                     Distorsionado  conf 0.20
 v6  NPC 6      ...                                                     Distorsionado  conf 0.08
 ```
 
 The exact sentences depend on the templates and the seed; what matters is that
-**the figure, the collective and the instrument scale** and confidence drops.
+**the figure drops and then rises, the collective and the instrument change**, and
+confidence drops.
 
 **If it only reaches 3-4 hops:** `contagioGarantizado` or `maxContagiosPorEco = 1` is missing.
 **If every NPC shows the same thing:** `soloCuandoSoyElNarrador` is missing.
@@ -71,15 +72,15 @@ new EcosAccion
     CantidadBase = 500,
     UnidadCantidad = "metros",
     PreposicionCantidad = "desde"
-    // No CantidadesPorNivel: the automatic curve computes 500, 750, 1,000, 1,400 and 2,000.
+    // No CantidadesPorNivel: the automatic curve computes 500, 450, 850, 1,200 and 1,800.
     Valencia = -70,
     Peso = 0.85f
 }
 ```
 
-**Expected result:** 500 → 750 → 1,000 → 1,400 → 2,000 m. Confidence drops, but the
-story remains plausible. The measurement curve is gentler than the head-count one so
-that a shot does not end up at 50,000 m.
+**Expected result:** 500 → 450 → 850 → 1,200 → 1,800 m. Confidence drops, the Smoothed
+level loses detail, and the higher levels recover the magnitude. The measurement curve is
+gentler than the head-count one so that a shot does not end up at 50,000 m.
 
 **Variation:** for a magic weapon, use `CantidadesPorNivel = new[] { 500, 900, 1500,
 2400, 4000 }` and raise `factorDegradacionPorSalto` so the level arrives sooner. The
@@ -87,7 +88,7 @@ override is optional: you only need it if you want an exact ladder.
 
 ---
 
-## Recipe 3 — The feat of the ~1,100 bandits
+## Recipe 3 — The feat of the 110 bandits
 
 **Goal:** the canonical rumor example.
 
@@ -102,7 +103,7 @@ new EcosAccion
     CantidadBase = 10,
     UnidadCantidad = "bandidos",
     CantidadComoObjeto = true,
-    // No figure table: 10 -> ~30 -> ~90 -> ~350 -> ~1,100.
+    // No figure table: 10 -> ~2 -> ~35 -> ~70 -> ~110.
     ContenedoresPorNivel = new[]
     {
         "un grupo de", "una banda de", "una hueste de", "un ejército de", "un pelotón de"
@@ -121,15 +122,21 @@ new EcosAccion
 
 ```
 "eliminó a un grupo de 10 bandidos, con su espada"
-"eliminó a una banda de ~30 bandidos, con su espada"
-"eliminó a una hueste de ~90 bandidos, sin ayuda de nadie"
-"eliminó a un ejército de ~350 bandidos, con las manos desnudas"
-"eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas"
+"eliminó a una banda de ~2 bandidos, con su espada"
+"eliminó a una hueste de ~35 bandidos, sin ayuda de nadie"
+"eliminó a un ejército de ~70 bandidos, con las manos desnudas"
+"eliminó a un pelotón de ~110 bandidos, con las manos desnudas"
 ```
 
 **Why it works:** the verb and the patient (the bandits) do not change; the figure is
 computed by the automatic curve and the collective/instrument are optional designer
 data.
+
+**If you want the story to turn:** add `AccionInversaId` to the original action and
+declare the opposite variant. For example, `regicidio` (10 soldiers) → `salvar_rey` (100
+soldiers, preposition `contra`). At Distorted, `EcosReglaDeformacionNarrativa` changes the
+action, the object and the valence, but keeps `AccionOriginalId`. The variant is declared
+text, not generated; see [06 — Quantities](06-Cantidades.md#4-inversion-when-the-story-turns).
 
 ---
 
@@ -239,8 +246,8 @@ void Awake()
 
 **Expected result:**
 
-- ES: "eliminó a un pelotón de ~1.100 bandidos, con las manos desnudas".
-- EN: "killed a platoon of ~1,100 bandits bare-handed".
+- ES: "eliminó a un pelotón de ~110 bandidos, con las manos desnudas".
+- EN: "killed a platoon of ~110 bandits bare-handed".
 
 The multilingual model maps "killed" and "eliminó" to the same category, so affinities
 and color do not change with the language.

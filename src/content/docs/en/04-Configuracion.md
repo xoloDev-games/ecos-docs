@@ -144,7 +144,9 @@ And it becomes a level using the bands:
 | `< 0.86` | Exaggerated |
 | `≥ 0.86` | Distorted |
 
-The degrader is **monotonic** (a ratchet): the echo never "improves" as it travels.
+The degrader is **monotonic** (a ratchet): the echo's level never "improves" as it travels.
+The figure can fall within a level (for example, Smoothed attenuates) and rise again at the
+next one; the monotonicity belongs to the level, not to the quantity.
 
 | Value | Expected chain of 6 hops |
 | --- | --- |

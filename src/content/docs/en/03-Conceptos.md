@@ -16,11 +16,13 @@ SujetoId + AccionId + ObjetoId + Nivel + Intencion + Intensidad + Confianza + Sa
 - It is **immutable**: each hop produces a derived copy with `Derivar(...)`.
 - It keeps its `Id` throughout the chain (it is the *same* rumor, told differently).
 
-**What changes as it propagates:** `Nivel`, `Intencion`, `Intensidad`, `Confianza`,
-`Saltos`, `NarradorId`, `Semilla`. **What never changes:** `AccionId` and `ObjetoId` (the
-verb and the patient). `SujetoId` only changes to `@Desconocido` through the anonymization
-rule. That is the *Zero Hallucinations* contract: the account deforms, not the identity of
-the fact.
+**What changes as it propagates:** `Nivel`, `Intencion`, `DireccionDeformacion`,
+`Intensidad`, `Confianza`, `Saltos`, `NarradorId`, `Semilla`. In normal deformation,
+`AccionId` and `ObjetoId` (verb and patient) are preserved. At Distorted they can change to
+a declared inverse variant (`AccionInversaId`/`ObjetoInversoId`); the original fact remains
+in `AccionOriginalId`/`ObjetoOriginalId`. `SujetoId` only changes to `@Desconocido` through
+the anonymization rule. That is the *Zero Hallucinations* contract: the account deforms,
+but every variant is declared and the original fact remains auditable.
 
 ## 2. Channel (`EcosScope`) — isolation
 
@@ -76,8 +78,8 @@ the rest Distorted.
 `Neutral`, `Warning`, `Boast`, `Gossip`, `Threat`, `Lament`.
 
 It determines **template + attribution + tag line**. "I saw it with my own eyes" or "what a
-misfortune" are voices; the fact remains the same. The intention classifier is heuristic
-(cheap); it does not use the model.
+misfortune" are voices; the fact remains the same unless a declared inverse variant
+exists. The intention classifier is heuristic (cheap); it does not use the model.
 
 ## 5. Confidence / credibility (`Confianza`)
 
@@ -105,14 +107,17 @@ rule already replaces it (demo preset).
 ## 7. Data vs. flourish (the key to this asset)
 
 - The **fact** is: subject + verb + patient + **declared quantity**.
-- **Degradation** cannot change the verb or the patient, but **it can**:
-  - scale the declared figure automatically (500 → 2.000 m; 10 → 1.100 bandits);
-  - change the collective ("a group of" → "a squad of");
-  - change the instrument ("with his sword" → "with his bare hands");
-  - add emphasis, prefixes, tag lines, and elemental color.
+- **Degradation** can attenuate or exaggerate the figure (10 → 2 → 35 → 70 → 110; 500 →
+  450 → 850 → 1,200 → 1,800), change the collective, change the instrument, and add
+  emphasis, prefixes, tag lines, and elemental color.
+- At the **Distorted** level, if the action declares `AccionInversaId`, the story can turn
+  into a hand-authored opposite variant ("committed regicide" → "tried to save the
+  king"). The original fact remains in `AccionOriginalId`; the variant is never
+  generated.
 
-That is a real rumor: **the data deforms, the identity of the fact does not**. Full detail
-in [06 — Quantities](06-Cantidades.md).
+That is a real rumor: **the data deforms and, sometimes, the version being told turns;
+the original fact remains auditable**. Full detail in
+[06 — Quantities](06-Cantidades.md).
 
 ---
 

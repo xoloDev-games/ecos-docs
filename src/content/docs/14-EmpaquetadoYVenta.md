@@ -101,7 +101,7 @@ assets.
 ```json
 {
   "name": "com.xolodev.ecos",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "displayName": "Ecos — Rumor Propagation & Degradation",
   "description": "Propagación boca a boca de rumores entre NPCs con degradación procedural, cantidades escalables y cero alucinaciones. Multilingüe ES/EN, Edge AI, determinista.",
   "unity": "6000.3",
@@ -118,7 +118,7 @@ assets.
   "samples": [
     {
       "displayName": "Demo (6 saltos)",
-      "description": "Escena generada con 5 hechos, 6 NPCs y cadenas visibles.",
+      "description": "Escena generada con 6 hechos, 6 NPCs y cadenas visibles.",
       "path": "Samples~/Demo"
     }
   ]
@@ -177,7 +177,7 @@ Opciones:
 ```powershell
 .\empaquetar.ps1 -SinModelo             # sin pesos (BYO model) — usar para la tienda
 .\empaquetar.ps1 -SinTar                # sólo la carpeta, sin .tgz
-.\empaquetar.ps1 -Version 1.1.0         # cambia la versión SemVer
+.\empaquetar.ps1 -Version 1.2.0         # cambia la versión SemVer
 ```
 
 El script:
@@ -276,9 +276,12 @@ Actualiza:
 
 ### Qué destacar en la ficha
 
-- **Cero alucinaciones**: el hecho nunca cambia de verbo ni de paciente.
-- **Cantidades que escalan solas**: 10 → ~1.100 bandidos; 500 → ~2.000 m, sin tablas
-  manuales por nivel.
+- **Cero alucinaciones**: ninguna variante se genera; la inversa está declarada y el
+  hecho original se conserva.
+- **Cantidades que suben y bajan solas**: 10 → 2 → 110 bandidos; 500 → 450 → 1.800 m,
+  sin tablas manuales por nivel.
+- **Giro narrativo declarado**: `regicidio` → `salvar_rey` en Distorsionado, con
+  trazabilidad del hecho original.
 - **6 saltos visibles** con una boca por salto.
 - **Multijugador aislado** por scope, con puentes anonimizados.
 - **Determinista**: misma semilla, misma historia.

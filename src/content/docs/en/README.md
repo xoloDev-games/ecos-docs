@@ -14,14 +14,18 @@ Root namespace: `xoloDev.Ecos` · Pure domain: `xoloDev.Ecos.Core`
 
 - An NPC lives through a fact ("the blacksmith burned the village").
 - The fact spreads by word of mouth among the NPCs of a channel.
-- At each hop the account **deforms**: it adds flourishes, loses detail, exaggerates the
-  quantities, changes the intention, and lowers credibility.
+- At each hop the account **deforms**: it adds flourishes, loses detail, raises or lowers
+  the quantities, changes the intention, and lowers credibility.
+- At Distorted it can turn into a **declared inverse variant** ("committed regicide" →
+  "tried to save the king"), preserving the original fact for auditing.
 - The final text is written by a **procedural composer** from dictionaries.
 
 **It is not** an AI text generator. No model writes the sentence.
-The lightweight model (optional) only classifies two enums: *exaggeration level* and
-*intention*. This is the **Zero Hallucinations** rule: the game never invents verbs,
-culprits, or patients that the designer has not declared.
+The lightweight model (optional) provides embeddings to map actions to elemental
+categories; the *exaggeration level* and *intention* are decided by deterministic
+classifiers that you can also replace with your own (BYOM). This is the **Zero
+Hallucinations** rule: the game never invents verbs, culprits, or patients that the
+designer has not declared.
 
 ![Architecture](arquitectura.png)
 
@@ -36,7 +40,7 @@ culprits, or patients that the designer has not declared.
 | [03 — Concepts](03-Conceptos.md) | Echo, channel, level, intention, confidence, hops. |
 | [04 — Configuration](04-Configuracion.md) | Every knob, with its expected effect. |
 | [05 — Library and texts](05-BibliotecaYTextos.md) | Subjects, actions, objects, templates, attributions. |
-| [06 - Quantities and head counts](06-Cantidades.md) | The automatic curve: 500→2.000 m, 10→~1.100 bandits. |
+| [06 - Quantities and head counts](06-Cantidades.md) | Non-monotonic curve: 500→450→1,800 m; declared inversion. |
 | [07 — Emitting echoes](07-EmitirEcos.md) | Triggers, UnityEvents, code, multiplayer. |
 | [08 — Listening and reacting](08-EscucharYReaccionar.md) | Listeners, NPC memory, reactions, custom sinks. |
 | [09 — NPCs and profiles](09-NPCsYPerfiles.md) | Personality, traits, biases, memory. |

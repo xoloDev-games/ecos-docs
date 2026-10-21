@@ -91,10 +91,13 @@ El verbo **ya conjugado** y el dato cuantitativo del hecho.
 | `CantidadBase` | int | Dato cuantitativo base. `0` = sin cantidad. |
 | `UnidadCantidad` | string | `metros`, `bandidos`, `días`. Vacío = no se muestra. |
 | `PreposicionCantidad` | string | `desde`, `a`, `contra`. Vacío = sin preposición. |
+| `CantidadEsRecuento` | bool | La cifra es un recuento aunque se diga aparte (`..., con 10 soldados`). |
 | `CantidadesPorNivel` | int[5] | **Override opcional**: cifra exacta por nivel. Normalmente se deja vacío y la curva automática calcula la cifra. |
 | `ContenedoresPorNivel` | string[5] | Colectivo opcional por nivel (`un grupo de` → `un pelotón de`). |
 | `InstrumentosPorNivel` | string[5] | Instrumento opcional por nivel (`con su espada` → `con las manos desnudas`). |
 | `CantidadComoObjeto` | bool | La cantidad sustituye al objeto directo. |
+| `AccionInversaId` | string | Variante opuesta declarada para el nivel Distorsionado (`regicidio` → `salvar_rey`). Vacío = no se invierte. |
+| `ObjetoInversoId` | string | Objeto de la variante inversa. Vacío = conservar el objeto del eco. |
 
 La cantidad se explica a fondo en [06 — Cantidades](06-Cantidades.md).
 
@@ -128,7 +131,9 @@ Con `objetoId = pozo` y la plantilla por defecto:
 | Distorsionado | "El herrero envenenó el pozo con ayuda del demonio… y nadie hizo nada." |
 
 Las palabras concretas dependen de tus listas `Prefijos`, `Sufijos`, `Adverbios` y de
-la plantilla; lo importante es que **el verbo y el paciente no cambian**.
+la plantilla. En este ejemplo no hay inversión: el verbo y el paciente se conservan. Si
+la acción declara `AccionInversaId`, el nivel Distorsionado puede cambiar a la variante
+opuesta, siempre escrita a mano en la biblioteca.
 
 ---
 
